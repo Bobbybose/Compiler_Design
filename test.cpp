@@ -1,6 +1,12 @@
 #include <iostream>
 
+using namespace std;
+
 int main()
 {
-    std::cout << "Hello World!" << std::endl;
+    string s;
+
+    cin >> s;
+
+    cout << "Hello new world!" << endl;
 }
