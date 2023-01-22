@@ -26,9 +26,9 @@ enum Token {
 %}
 
 
-/* Options.  Specifically, don't generate the yyunput() function: Since we
- * don't use it, we'd get a -Wall warning about an unused static function.
- */
+    /* Options.  Specifically, don't generate the yyunput() function: Since we
+    * don't use it, we'd get a -Wall warning about an unused static function.
+    */
 %option nounput
 
 

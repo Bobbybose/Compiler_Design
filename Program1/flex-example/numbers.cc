@@ -471,12 +471,13 @@ enum Token {
 	WORD
 };
 #line 474 "numbers.cc"
-/* Options.  Specifically, don't generate the yyunput() function: Since we
- * don't use it, we'd get a -Wall warning about an unused static function.
- */
+#line 30 "numbers.l"
+    /* Options.  Specifically, don't generate the yyunput() function: Since we
+    * don't use it, we'd get a -Wall warning about an unused static function.
+    */
 /* Define named patterns. */
 
-#line 480 "numbers.cc"
+#line 481 "numbers.cc"
 
 #define INITIAL 0
 
@@ -691,11 +692,10 @@ YY_DECL
 		}
 
 	{
-#line 48 "numbers.l"
+#line 49 "numbers.l"
 
 
 
-#line 52 "numbers.l"
     /*******************
      * Rules section.  Any indented text or text in %{ %} is copied to the
      * output.  BUT note that:
