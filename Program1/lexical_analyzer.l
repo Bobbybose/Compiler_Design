@@ -23,8 +23,29 @@ enum Token {
     FPLIT,
     CHARLIT,
     STRINGLIT,
-    OPERATOR,
-    PUNCTUATION
+    EQUAL,
+    PLUS,
+    MINUS,
+    STAR,
+    FORWARDSLASH,
+    PERCENT,
+    EQUALEQUAL,
+    NOTEQUAL,
+    LESSTHAN,
+    LESSTHANOREQUAL,
+    GREATERTHAN,
+    GREATERTHANOREQUAL,
+    AND,
+    OR,
+    COMMA,
+    PERIOD,
+    SEMICOLON,
+    OPENPARANTHESIS,
+    CLOSEPARANTHESIS,
+    OPENBRACE,
+    CLOSEBRACE,
+    OPENBRACKET,
+    CLOSEBRACKET
 };
 %}
 
@@ -97,10 +118,53 @@ string token_name(int tok){
             return yytext; break;
         case STRINGLIT: 
             return yytext; break;
-        case OPERATOR: 
-            return yytext; break;
-        case PUNCTUATION: 
-            return yytext; break;      
+        case EQUAL: 
+            return "="; break;
+        case PLUS: 
+            return "+"; break;      
+        case MINUS: 
+            return "-"; break;      
+        case STAR: 
+            return "*"; break;      
+        case FORWARDSLASH: 
+            return "/"; break;      
+        case PERCENT: 
+            return "%%"; break;      
+        case EQUALEQUAL: 
+            return "=="; break;      
+        case NOTEQUAL: 
+            return "!="; break;      
+        case LESSTHAN: 
+            return "<"; break;      
+        case LESSTHANOREQUAL: 
+            return "<="; break;      
+        case GREATERTHAN: 
+            return ">"; break;      
+        case GREATERTHANOREQUAL: 
+            return ">="; break;      
+        case AND: 
+            return "&&"; break;      
+        case OR: 
+            return "||"; break;      
+        case COMMA: 
+            return ","; break;      
+        case PERIOD: 
+            return "."; break;      
+        case SEMICOLON: 
+            return ";"; break;      
+        case OPENPARANTHESIS: 
+            return "("; break;      
+        case CLOSEPARANTHESIS: 
+            return ")"; break;      
+        case OPENBRACE: 
+            return "{"; break;      
+        case CLOSEBRACE: 
+            return "}"; break;      
+        case OPENBRACKET: 
+            return "["; break;      
+        case CLOSEBRACKET: 
+            return "]"; break;      
+            
     }
 }
 
