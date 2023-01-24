@@ -466,7 +466,7 @@ char *yytext;
  * #defines instead.
  */
 enum Token {
-	INTEGER = 1,
+	INTEGER,
 	FLOAT,
 	WORD
 };
@@ -1791,6 +1791,7 @@ int main()
 
     // The usual way of calling the lexer in a loop, when the lexer uses "return".
     while ((token = yylex()) != 0) {
+        std::cout << token << std::endl;
         std::cout << "Got token: " << token_name(token)
                   << ": " << yytext << "\n";
     }

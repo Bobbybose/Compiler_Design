@@ -361,14 +361,14 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[55] =
+static const flex_int16_t yy_accept[56] =
     {   0,
         0,    0,   17,   15,   14,   14,   13,   12,   12,   12,
-       12,   12,   12,   12,   12,   12,   12,   14,   12,   12,
-       12,    4,   12,   12,   12,    1,   12,   12,   12,   12,
-       12,   12,   12,   12,    5,    6,   12,   12,   12,   12,
-        8,    2,   12,   12,   12,    9,   12,    7,   12,   12,
-        3,   10,   11,    0
+       12,   12,   12,   12,   12,   12,   12,   14,   13,   12,
+       12,   12,    4,   12,   12,   12,    1,   12,   12,   12,
+       12,   12,   12,   12,   12,    5,    6,   12,   12,   12,
+       12,    8,    2,   12,   12,   12,    9,   12,    7,   12,
+       12,    3,   10,   11,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -410,62 +410,62 @@ static const YY_CHAR yy_meta[23] =
         2,    2
     } ;
 
-static const flex_int16_t yy_base[57] =
+static const flex_int16_t yy_base[58] =
     {   0,
-        0,    0,  108,  109,   21,   23,  109,  103,   23,   24,
-       25,   27,   33,   26,   28,   29,   30,   47,    0,  102,
-       47,  101,   34,   42,   49,  100,   51,   52,   55,   56,
-       60,   57,   53,   58,   99,   97,   63,   64,   71,   72,
-       96,   95,   73,   74,   77,   94,   78,   93,   75,   83,
-       92,   91,   90,  109,   91,   87
+        0,    0,  110,  111,   21,   23,  105,  104,   23,   24,
+       25,   27,   33,   26,   28,   29,   30,   47,  103,    0,
+      102,   47,  101,   34,   42,   49,  100,   51,   52,   55,
+       56,   60,   57,   53,   58,   99,   97,   63,   64,   71,
+       72,   96,   95,   73,   74,   77,   94,   78,   93,   75,
+       83,   92,   91,   90,  111,   91,   87
     } ;
 
-static const flex_int16_t yy_def[57] =
+static const flex_int16_t yy_def[58] =
     {   0,
-       54,    1,   54,   54,   54,   54,   54,   55,   55,   55,
-       55,   55,   55,   55,   55,   55,   55,   54,   56,   55,
-       55,   55,   55,   55,   55,   55,   55,   55,   55,   55,
-       55,   55,   55,   55,   55,   55,   55,   55,   55,   55,
-       55,   55,   55,   55,   55,   55,   55,   55,   55,   55,
-       55,   55,   55,    0,   54,   54
+       55,    1,   55,   55,   55,   55,   55,   56,   56,   56,
+       56,   56,   56,   56,   56,   56,   56,   55,   55,   57,
+       56,   56,   56,   56,   56,   56,   56,   56,   56,   56,
+       56,   56,   56,   56,   56,   56,   56,   56,   56,   56,
+       56,   56,   56,   56,   56,   56,   56,   56,   56,   56,
+       56,   56,   56,   56,    0,   55,   55
     } ;
 
-static const flex_int16_t yy_nxt[132] =
+static const flex_int16_t yy_nxt[134] =
     {   0,
         4,    5,    6,    7,    8,    8,    8,    9,   10,   11,
        12,    8,   13,    8,    8,    8,   14,   15,    8,    8,
-       16,   17,   18,   18,   18,   18,   19,   19,   19,   19,
-       19,   19,   19,   19,   21,   28,   19,   19,   23,   22,
-       24,   31,   25,   26,   30,   19,   29,   27,   18,   18,
-       19,   33,   19,   32,   19,   19,   19,   34,   19,   19,
-       19,   19,   42,   19,   43,   35,   19,   19,   39,   36,
-       37,   38,   40,   41,   19,   19,   19,   19,   19,   46,
-       19,   19,   44,   45,   50,   47,   19,   51,   19,   52,
-       49,   48,   20,   19,   19,   19,   19,   19,   19,   19,
+       16,   17,   18,   18,   18,   18,   20,   20,   20,   20,
+       20,   20,   20,   20,   22,   29,   20,   20,   24,   23,
+       25,   32,   26,   27,   31,   20,   30,   28,   18,   18,
+       20,   34,   20,   33,   20,   20,   20,   35,   20,   20,
+       20,   20,   43,   20,   44,   36,   20,   20,   40,   37,
+       38,   39,   41,   42,   20,   20,   20,   20,   20,   47,
+       20,   20,   45,   46,   51,   48,   20,   52,   20,   53,
+       50,   49,   21,   20,   20,   20,   20,   20,   20,   20,
 
-       19,   53,   19,   19,   19,   19,   19,   54,    3,   54,
-       54,   54,   54,   54,   54,   54,   54,   54,   54,   54,
-       54,   54,   54,   54,   54,   54,   54,   54,   54,   54,
-       54
+       20,   54,   20,   20,   20,   20,   19,   20,   19,   55,
+        3,   55,   55,   55,   55,   55,   55,   55,   55,   55,
+       55,   55,   55,   55,   55,   55,   55,   55,   55,   55,
+       55,   55,   55
     } ;
 
-static const flex_int16_t yy_chk[132] =
+static const flex_int16_t yy_chk[134] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    5,    5,    6,    6,    9,   10,   11,   14,
-       12,   15,   16,   17,    9,   14,   13,   23,   11,   10,
-       12,   17,   12,   13,   16,   24,   15,   13,   18,   18,
-       21,   23,   25,   21,   27,   28,   33,   24,   29,   30,
-       32,   34,   33,   31,   34,   25,   37,   38,   30,   27,
-       28,   29,   31,   32,   39,   40,   43,   44,   49,   39,
-       45,   47,   37,   38,   45,   40,   50,   47,   56,   49,
-       44,   43,   55,   53,   52,   51,   48,   46,   42,   41,
+       12,   15,   16,   17,    9,   14,   13,   24,   11,   10,
+       12,   17,   12,   13,   16,   25,   15,   13,   18,   18,
+       22,   24,   26,   22,   28,   29,   34,   25,   30,   31,
+       33,   35,   34,   32,   35,   26,   38,   39,   31,   28,
+       29,   30,   32,   33,   40,   41,   44,   45,   50,   40,
+       46,   48,   38,   39,   46,   41,   51,   48,   57,   50,
+       45,   44,   56,   54,   53,   52,   49,   47,   43,   42,
 
-       36,   50,   35,   26,   22,   20,    8,    3,   54,   54,
-       54,   54,   54,   54,   54,   54,   54,   54,   54,   54,
-       54,   54,   54,   54,   54,   54,   54,   54,   54,   54,
-       54
+       37,   51,   36,   27,   23,   21,   19,    8,    7,    3,
+       55,   55,   55,   55,   55,   55,   55,   55,   55,   55,
+       55,   55,   55,   55,   55,   55,   55,   55,   55,   55,
+       55,   55,   55
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -504,7 +504,7 @@ enum Token {
     RETURN,
     STRUCT,
     ID,
-    INTLIT = 1,
+    INTLIT/*,
     FPLIT,
     CHARLIT,
     STRINGLIT,
@@ -530,7 +530,7 @@ enum Token {
     OPENBRACE,
     CLOSEBRACE,
     OPENBRACKET,
-    CLOSEBRACKET
+    CLOSEBRACKET*/
 };
 #line 536 "lexical_analyzer.cc"
 /* Don't generate the yyunput() function to prevent -Wall warning */
@@ -787,13 +787,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 55 )
+				if ( yy_current_state >= 56 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 109 );
+		while ( yy_base[yy_current_state] != 111 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -1223,7 +1223,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 55 )
+			if ( yy_current_state >= 56 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1251,11 +1251,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 55 )
+		if ( yy_current_state >= 56 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 54);
+	yy_is_jam = (yy_current_state == 55);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1903,7 +1903,7 @@ void yyfree (void * ptr )
 using namespace std;
 
 string token_name(int tok){
-    switch(tok){
+    switch(tok) {
         case IF:                 return "if"; break;
         case ELSE:               return "else"; break;
         case WHILE:              return "while"; break;
@@ -1916,33 +1916,7 @@ string token_name(int tok){
         case RETURN:             return "return"; break;
         case STRUCT:             return "struct"; break;
         case ID:                 return "identifier"; break;
-        /*case INTLIT:             return "integer-literal"; break;
-        case FPLIT:              return "floating-point-literal"; break;
-        case CHARLIT:            return "character-literal"; break;
-        case STRINGLIT:          return "string-literal"; break;
-        case EQUAL:              return "="; break;
-        case PLUS:               return "+"; break;      
-        case MINUS:              return "-"; break;      
-        case STAR:               return "*"; break;      
-        case FORWARDSLASH:       return "/"; break;      
-        case PERCENT:            return "%%"; break;      
-        case EQUALEQUAL:         return "=="; break;      
-        case NOTEQUAL:           return "!="; break;      
-        case LESSTHAN:           return "<"; break;      
-        case LESSTHANOREQUAL:    return "<="; break;      
-        case GREATERTHAN:        return ">"; break;      
-        case GREATERTHANOREQUAL: return ">="; break;      
-        case AND:                return "&&"; break;      
-        case OR:                 return "||"; break;      
-        case COMMA:              return ","; break;      
-        case PERIOD:             return "."; break;      
-        case SEMICOLON:          return ";"; break;      
-        case OPENPARANTHESIS:    return "("; break;      
-        case CLOSEPARANTHESIS:   return ")"; break;      
-        case OPENBRACE:          return "{"; break;      
-        case CLOSEBRACE:         return "}"; break;      
-        case OPENBRACKET:        return "["; break;      
-        case CLOSEBRACKET:       return "]"; break;        */      
+        case INTLIT:             return "integer-literal"; break;  
         default:                 return "????"; break;
     }
 }
@@ -1950,8 +1924,9 @@ string token_name(int tok){
 int main(){
     // To hold current token
     int token;
-    
-    while ((token = yylex()) != 0){
+
+    while ((token = yylex()) != 0) {
+        //cout << token << endl;
         string token_type = token_name(token);
 
         cout << token_type;

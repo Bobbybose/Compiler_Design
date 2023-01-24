@@ -19,7 +19,7 @@ enum Token {
     RETURN,
     STRUCT,
     ID,
-    INTLIT = 1,
+    INTLIT/*,
     FPLIT,
     CHARLIT,
     STRINGLIT,
@@ -45,7 +45,7 @@ enum Token {
     OPENBRACE,
     CLOSEBRACE,
     OPENBRACKET,
-    CLOSEBRACKET
+    CLOSEBRACKET*/
 };
 %}
 
@@ -119,7 +119,7 @@ comments [\\\\]
     return ID;
 }
 
-{digits} {
+{digits}+ {
     return INTLIT;
 }
 
@@ -138,7 +138,7 @@ comments [\\\\]
 using namespace std;
 
 string token_name(int tok){
-    switch(tok){
+    switch(tok) {
         case IF:                 return "if"; break;
         case ELSE:               return "else"; break;
         case WHILE:              return "while"; break;
@@ -151,33 +151,7 @@ string token_name(int tok){
         case RETURN:             return "return"; break;
         case STRUCT:             return "struct"; break;
         case ID:                 return "identifier"; break;
-        /*case INTLIT:             return "integer-literal"; break;
-        case FPLIT:              return "floating-point-literal"; break;
-        case CHARLIT:            return "character-literal"; break;
-        case STRINGLIT:          return "string-literal"; break;
-        case EQUAL:              return "="; break;
-        case PLUS:               return "+"; break;      
-        case MINUS:              return "-"; break;      
-        case STAR:               return "*"; break;      
-        case FORWARDSLASH:       return "/"; break;      
-        case PERCENT:            return "%%"; break;      
-        case EQUALEQUAL:         return "=="; break;      
-        case NOTEQUAL:           return "!="; break;      
-        case LESSTHAN:           return "<"; break;      
-        case LESSTHANOREQUAL:    return "<="; break;      
-        case GREATERTHAN:        return ">"; break;      
-        case GREATERTHANOREQUAL: return ">="; break;      
-        case AND:                return "&&"; break;      
-        case OR:                 return "||"; break;      
-        case COMMA:              return ","; break;      
-        case PERIOD:             return "."; break;      
-        case SEMICOLON:          return ";"; break;      
-        case OPENPARANTHESIS:    return "("; break;      
-        case CLOSEPARANTHESIS:   return ")"; break;      
-        case OPENBRACE:          return "{"; break;      
-        case CLOSEBRACE:         return "}"; break;      
-        case OPENBRACKET:        return "["; break;      
-        case CLOSEBRACKET:       return "]"; break;        */      
+        case INTLIT:             return "integer-literal"; break;  
         default:                 return "????"; break;
     }
 }
@@ -185,8 +159,9 @@ string token_name(int tok){
 int main(){
     // To hold current token
     int token;
-    
-    while ((token = yylex()) != 0){
+
+    while ((token = yylex()) != 0) {
+        //cout << token << endl;
         string token_type = token_name(token);
 
         cout << token_type;
