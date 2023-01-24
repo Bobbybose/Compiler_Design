@@ -19,7 +19,7 @@ enum Token {
     RETURN,
     STRUCT,
     ID,
-    INTLIT/*,
+    INTLIT,
     FPLIT,
     CHARLIT,
     STRINGLIT,
@@ -45,18 +45,18 @@ enum Token {
     OPENBRACE,
     CLOSEBRACE,
     OPENBRACKET,
-    CLOSEBRACKET*/
+    CLOSEBRACKET,
+    NOT_IMPORTANT
 };
 %}
 
 /* Don't generate the yyunput() function to prevent -Wall warning */
 %option nounput
+%option yylineno
 
 /* Pattern definitions */
 alpha [a-zA-Z]
 digits [0-9]
-ws [ \t\n]
-comments [\\\\]
 
 %top{
 }
@@ -71,49 +71,27 @@ comments [\\\\]
 /* Rules section */
 %}
 
-"if" {
-    return IF;
-}
+"if" {return IF;}
 
-"else" {
-    return ELSE;
-}
+"else" {return ELSE;}
 
-"while" {
-    return WHILE;
-}
+"while" {return WHILE;}
 
-"do" {
-    return DO;
-}
+"do" {return DO;}
 
-"for" {
-    return FOR;
-}
+"for" {return FOR;}
 
-"int" {
-    return INT;
-}
+"int" {return INT;}
 
-"float" {
-    return FLOAT;
-}
+"float" {return FLOAT;}
 
-"char" {
-    return CHAR;
-}
+"char" {return CHAR;}
 
-"void" {
-    return VOID;
-}
+"void" {return VOID;}
 
-"return" {
-    return RETURN;
-}
+"return" {return RETURN;}
 
-"struct" {
-    return STRUCT;
-}
+"struct" {return STRUCT;}
 
 ({alpha}|_)+({alpha}|{digits}|_)* {
     return ID;
@@ -123,11 +101,79 @@ comments [\\\\]
     return INTLIT;
 }
 
-{ws}+ { }       
-
-. {
-    std::cout << "Unrecognized character: " << yytext << "\n";
+({digits}*"."{digits}+)|({digits}+"."{digits}*) {
+    // For floating point without exponents
+    return FPLIT;
 }
+
+(({digits}*"."?{digits}+)|({digits}+"."{digits}*))("e"|"E")("+"|"-")?{digits}+ {
+    // For floating point with exponents
+    return FPLIT;
+}
+
+"'"."'" {
+    return CHARLIT;
+}
+
+"\""(.*)"\"" {
+    return STRINGLIT;
+}
+
+"=" {return EQUAL;}
+
+"+" {return PLUS;}
+
+"-" {return MINUS;}
+
+"*" {return STAR;}
+
+"/" {return FORWARDSLASH;}
+
+"%" {return PERCENT;}
+
+"==" {return EQUALEQUAL;}
+
+"!=" {return NOTEQUAL;}
+
+"<" {return LESSTHAN;}
+
+"<=" {return LESSTHANOREQUAL;}
+
+">" {return GREATERTHAN;}
+
+">=" {return GREATERTHANOREQUAL;}
+
+"&&" {return AND;}
+
+"||" {return OR;}
+
+"," {return COMMA;}
+
+"." {return PERIOD;}
+
+";" {return SEMICOLON;}
+
+"(" {return OPENPARANTHESIS;}
+
+")" {return CLOSEPARANTHESIS;}
+
+"{" {return OPENBRACE;}
+
+"}" {return CLOSEBRACE;}
+
+"[" {return OPENBRACKET;}
+
+"]" {return CLOSEBRACKET;}
+
+[ \t\r]+ {return NOT_IMPORTANT;}       
+
+[\n]+ {}       
+
+("//".*) {return NOT_IMPORTANT;}
+
+("/*"(.|\n)*"*/") {return NOT_IMPORTANT;}
+
+. {std::cout << "Unrecognized character: " << yytext << "\n";}
 
 
 %%
@@ -152,6 +198,33 @@ string token_name(int tok){
         case STRUCT:             return "struct"; break;
         case ID:                 return "identifier"; break;
         case INTLIT:             return "integer-literal"; break;  
+        case FPLIT:              return "floating-point-literal"; break;
+        case CHARLIT:            return "character-literal"; break;
+        case STRINGLIT:          return "string-literal"; break;
+        case EQUAL:              return "="; break;
+        case PLUS:               return "+"; break;
+        case MINUS:              return "-"; break;
+        case STAR:               return "*"; break;
+        case FORWARDSLASH:       return "/"; break;
+        case PERCENT:            return "%"; break;
+        case EQUALEQUAL:         return "=="; break;
+        case NOTEQUAL:           return "!="; break;
+        case LESSTHAN:           return "<"; break;
+        case LESSTHANOREQUAL:    return "<="; break;
+        case GREATERTHAN:        return ">"; break;
+        case GREATERTHANOREQUAL: return ">="; break;
+        case AND:                return "&&"; break;
+        case OR:                 return "||"; break;
+        case COMMA:              return ","; break;
+        case PERIOD:             return "."; break;
+        case SEMICOLON:          return ";"; break;
+        case OPENPARANTHESIS:    return "("; break;
+        case CLOSEPARANTHESIS:   return ")"; break;
+        case OPENBRACE:          return "{"; break;
+        case CLOSEBRACE:         return "}"; break;
+        case OPENBRACKET:        return "["; break;
+        case CLOSEBRACKET:       return "]"; break;
+        case NOT_IMPORTANT:      return "not important"; break;
         default:                 return "????"; break;
     }
 }
@@ -159,19 +232,33 @@ string token_name(int tok){
 int main(){
     // To hold current token
     int token;
+    int column_num = 1;
+    int old_row_num = 1;
 
     while ((token = yylex()) != 0) {
-        //cout << token << endl;
+
+        if(yylineno != old_row_num){
+            old_row_num = yylineno;
+            column_num = 1;
+        }
+
         string token_type = token_name(token);
+
+        if(token_type == "not important"){
+            column_num += strlen(yytext);
+            continue;
+        }
 
         cout << token_type;
         
         if(token_type == "identifier" || token_type == "integer-literal" || token_type == "floating-point-literal" || token_type == "character-literal" || token_type == "string-literal"){
-            cout << ": " << yytext << "\n";
+            cout << ": " << yytext;
         }
-        else{
-            cout << "\n";
-        }
+        
+        cout << ": " << yylineno << " " << column_num << "\n";
+
+        column_num += strlen(yytext);
+        
     }
 
     cout << "End of input.\n";
