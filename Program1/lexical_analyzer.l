@@ -6,6 +6,7 @@
 // Need for C++
 #define YY_DECL extern "C" int yylex()
 
+// All the different tokens that are evaluated by this lexical analyzer
 enum Token {
     IF = 1,
     ELSE,
@@ -19,39 +20,41 @@ enum Token {
     RETURN,
     STRUCT,
     ID,
-    INTLIT,
-    FPLIT,
-    CHARLIT,
-    STRINGLIT,
+    INT_LIT,
+    FP_LIT,
+    CHAR_LIT,
+    STRING_LIT,
     EQUAL,
     PLUS,
     MINUS,
     STAR,
-    FORWARDSLASH,
+    FORWARD_SLASH,
     PERCENT,
-    EQUALEQUAL,
-    NOTEQUAL,
-    LESSTHAN,
-    LESSTHANOREQUAL,
-    GREATERTHAN,
-    GREATERTHANOREQUAL,
+    EQUAL_EQUAL,
+    NOT_EQUAL,
+    LESS_THAN,
+    LESS_THAN_OR_EQUAL,
+    GREATER_THAN,
+    GREATER_THAN_OR_EQUAL,
     AND,
     OR,
     COMMA,
     PERIOD,
     SEMICOLON,
-    OPENPARANTHESIS,
-    CLOSEPARANTHESIS,
-    OPENBRACE,
-    CLOSEBRACE,
-    OPENBRACKET,
-    CLOSEBRACKET,
-    NOT_IMPORTANT
+    OPEN_PARANTHESIS,
+    CLOSE_PARANTHESIS,
+    OPEN_BRACE,
+    CLOSE_BRACE,
+    OPEN_BRACKET,
+    CLOSE_BRACKET,
+    NOT_IMPORTANT,
+    UNRECOGNIZED
 };
 %}
 
 /* Don't generate the yyunput() function to prevent -Wall warning */
 %option nounput
+/* Track line number for reporting purposes */
 %option yylineno
 
 /* Pattern definitions */
@@ -68,7 +71,9 @@ digits [0-9]
 
 
 %{
-/* Rules section */
+/* Rules section 
+   Defines the regex for the different tokens handled by this analyzer
+*/
 %}
 
 "if" {return IF;}
@@ -98,25 +103,25 @@ digits [0-9]
 }
 
 {digits}+ {
-    return INTLIT;
+    return INT_LIT;
 }
 
 ({digits}*"."{digits}+)|({digits}+"."{digits}*) {
     // For floating point without exponents
-    return FPLIT;
+    return FP_LIT;
 }
 
 (({digits}*"."?{digits}+)|({digits}+"."{digits}*))("e"|"E")("+"|"-")?{digits}+ {
     // For floating point with exponents
-    return FPLIT;
+    return FP_LIT;
 }
 
 "'"."'" {
-    return CHARLIT;
+    return CHAR_LIT;
 }
 
 "\""(.*)"\"" {
-    return STRINGLIT;
+    return STRING_LIT;
 }
 
 "=" {return EQUAL;}
@@ -127,21 +132,21 @@ digits [0-9]
 
 "*" {return STAR;}
 
-"/" {return FORWARDSLASH;}
+"/" {return FORWARD_SLASH;}
 
 "%" {return PERCENT;}
 
-"==" {return EQUALEQUAL;}
+"==" {return EQUAL_EQUAL;}
 
-"!=" {return NOTEQUAL;}
+"!=" {return NOT_EQUAL;}
 
-"<" {return LESSTHAN;}
+"<" {return LESS_THAN;}
 
-"<=" {return LESSTHANOREQUAL;}
+"<=" {return LESS_THAN_OR_EQUAL;}
 
-">" {return GREATERTHAN;}
+">" {return GREATER_THAN;}
 
-">=" {return GREATERTHANOREQUAL;}
+">=" {return GREATER_THAN_OR_EQUAL;}
 
 "&&" {return AND;}
 
@@ -153,19 +158,22 @@ digits [0-9]
 
 ";" {return SEMICOLON;}
 
-"(" {return OPENPARANTHESIS;}
+"(" {return OPEN_PARANTHESIS;}
 
-")" {return CLOSEPARANTHESIS;}
+")" {return CLOSE_PARANTHESIS;}
 
-"{" {return OPENBRACE;}
+"{" {return OPEN_BRACE;}
 
-"}" {return CLOSEBRACE;}
+"}" {return CLOSE_BRACE;}
 
-"[" {return OPENBRACKET;}
+"[" {return OPEN_BRACKET;}
 
-"]" {return CLOSEBRACKET;}
+"]" {return CLOSE_BRACKET;}
 
-[ \t\r]+ {return NOT_IMPORTANT;}       
+[ \t\r]+ {
+    // NOT_IMPORTANT is a token type that isn't printed but still needs to be looked at for column number tracking
+    return NOT_IMPORTANT;
+}       
 
 [\n]+ {}       
 
@@ -173,7 +181,7 @@ digits [0-9]
 
 ("/*"(.|\n)*"*/") {return NOT_IMPORTANT;}
 
-. {std::cout << "Unrecognized character: " << yytext << "\n";}
+. {return UNRECOGNIZED;}
 
 
 %%
@@ -183,85 +191,101 @@ digits [0-9]
 
 using namespace std;
 
+// Givens: Token to be evaluated
+// Returns: String name of token
+// Description: Determines the correct string name for the type of token being looked at
 string token_name(int tok){
     switch(tok) {
-        case IF:                 return "if"; break;
-        case ELSE:               return "else"; break;
-        case WHILE:              return "while"; break;
-        case DO:                 return "do"; break;
-        case FOR:                return "for"; break;
-        case INT:                return "int"; break;
-        case FLOAT:              return "float"; break;
-        case CHAR:               return "char"; break;
-        case VOID:               return "void"; break;
-        case RETURN:             return "return"; break;
-        case STRUCT:             return "struct"; break;
-        case ID:                 return "identifier"; break;
-        case INTLIT:             return "integer-literal"; break;  
-        case FPLIT:              return "floating-point-literal"; break;
-        case CHARLIT:            return "character-literal"; break;
-        case STRINGLIT:          return "string-literal"; break;
-        case EQUAL:              return "="; break;
-        case PLUS:               return "+"; break;
-        case MINUS:              return "-"; break;
-        case STAR:               return "*"; break;
-        case FORWARDSLASH:       return "/"; break;
-        case PERCENT:            return "%"; break;
-        case EQUALEQUAL:         return "=="; break;
-        case NOTEQUAL:           return "!="; break;
-        case LESSTHAN:           return "<"; break;
-        case LESSTHANOREQUAL:    return "<="; break;
-        case GREATERTHAN:        return ">"; break;
-        case GREATERTHANOREQUAL: return ">="; break;
-        case AND:                return "&&"; break;
-        case OR:                 return "||"; break;
-        case COMMA:              return ","; break;
-        case PERIOD:             return "."; break;
-        case SEMICOLON:          return ";"; break;
-        case OPENPARANTHESIS:    return "("; break;
-        case CLOSEPARANTHESIS:   return ")"; break;
-        case OPENBRACE:          return "{"; break;
-        case CLOSEBRACE:         return "}"; break;
-        case OPENBRACKET:        return "["; break;
-        case CLOSEBRACKET:       return "]"; break;
-        case NOT_IMPORTANT:      return "not important"; break;
-        default:                 return "????"; break;
+        case IF:                    return "if";                     break;
+        case ELSE:                  return "else";                   break;
+        case WHILE:                 return "while";                  break;
+        case DO:                    return "do";                     break;
+        case FOR:                   return "for";                    break;
+        case INT:                   return "int";                    break;
+        case FLOAT:                 return "float";                  break;
+        case CHAR:                  return "char";                   break;
+        case VOID:                  return "void";                   break;
+        case RETURN:                return "return";                 break;
+        case STRUCT:                return "struct";                 break;
+        case ID:                    return "identifier";             break;
+        case INT_LIT:               return "integer-literal";        break;  
+        case FP_LIT:                return "floating-point-literal"; break;
+        case CHAR_LIT:              return "character-literal";      break;
+        case STRING_LIT:            return "string-literal";         break;
+        case EQUAL:                 return "=";                      break;
+        case PLUS:                  return "+";                      break;
+        case MINUS:                 return "-";                      break;
+        case STAR:                  return "*";                      break;
+        case FORWARD_SLASH:         return "/";                      break;
+        case PERCENT:               return "%";                      break;
+        case EQUAL_EQUAL:           return "==";                     break;
+        case NOT_EQUAL:             return "!=";                     break;
+        case LESS_THAN:             return "<";                      break;
+        case LESS_THAN_OR_EQUAL:    return "<=";                     break;
+        case GREATER_THAN:          return ">";                      break;
+        case GREATER_THAN_OR_EQUAL: return ">=";                     break;
+        case AND:                   return "&&";                     break;
+        case OR:                    return "||";                     break;
+        case COMMA:                 return ",";                      break;
+        case PERIOD:                return ".";                      break;
+        case SEMICOLON:             return ";";                      break;
+        case OPEN_PARANTHESIS:      return "(";                      break;
+        case CLOSE_PARANTHESIS:     return ")";                      break;
+        case OPEN_BRACE:            return "{";                      break;
+        case CLOSE_BRACE:           return "}";                      break;
+        case OPEN_BRACKET:          return "[";                      break;
+        case CLOSE_BRACKET:         return "]";                      break;
+        case NOT_IMPORTANT:         return "not-important";          break;
+        case UNRECOGNIZED:          return "unrecognized";           break;
+        default:                    return "????";                   break;
     }
 }
 
+// Main function of code. Handles overall flow of lexical analysis
 int main(){
     // To hold current token
     int token;
+    // Track column number
     int column_num = 1;
+    // Used to track when there's a new line for column number reporting purposes
     int old_row_num = 1;
 
+    // Retrieving next token
     while ((token = yylex()) != 0) {
-
+        
+        // Obtain the type of token
+        string token_type = token_name(token);
+        
+        // Resetting column number on new lines
         if(yylineno != old_row_num){
             old_row_num = yylineno;
             column_num = 1;
         }
 
-        string token_type = token_name(token);
-
-        if(token_type == "not important"){
+        // If token is a comment or whitespace, still need to account for column number, but not print
+        if(token_type == "not-important"){
+            column_num += strlen(yytext);
+            continue;
+        }
+        
+        // If a token is unrecognized, inform the user
+        if(token_type == "unrecognized"){
+            cout << "Unrecognized character: " << yytext << ": " << yylineno << ", " << column_num << endl;
             column_num += strlen(yytext);
             continue;
         }
 
+        // Printing token, lexeme if needed, row number, and column number
         cout << token_type;
-        
         if(token_type == "identifier" || token_type == "integer-literal" || token_type == "floating-point-literal" || token_type == "character-literal" || token_type == "string-literal"){
             cout << ": " << yytext;
         }
-        
-        cout << ": " << yylineno << " " << column_num << "\n";
+        cout << ": " << yylineno << ", " << column_num << endl;
 
+        // Updating column number
         column_num += strlen(yytext);
         
     }
-
-    cout << "End of input.\n";
 
     // Freeing memory to prevent memory leaks
     yylex_destroy();

@@ -556,6 +556,7 @@ char *yytext;
 // Need for C++
 #define YY_DECL extern "C" int yylex()
 
+// All the different tokens that are evaluated by this lexical analyzer
 enum Token {
     IF = 1,
     ELSE,
@@ -569,40 +570,42 @@ enum Token {
     RETURN,
     STRUCT,
     ID,
-    INTLIT,
-    FPLIT,
-    CHARLIT,
-    STRINGLIT,
+    INT_LIT,
+    FP_LIT,
+    CHAR_LIT,
+    STRING_LIT,
     EQUAL,
     PLUS,
     MINUS,
     STAR,
-    FORWARDSLASH,
+    FORWARD_SLASH,
     PERCENT,
-    EQUALEQUAL,
-    NOTEQUAL,
-    LESSTHAN,
-    LESSTHANOREQUAL,
-    GREATERTHAN,
-    GREATERTHANOREQUAL,
+    EQUAL_EQUAL,
+    NOT_EQUAL,
+    LESS_THAN,
+    LESS_THAN_OR_EQUAL,
+    GREATER_THAN,
+    GREATER_THAN_OR_EQUAL,
     AND,
     OR,
     COMMA,
     PERIOD,
     SEMICOLON,
-    OPENPARANTHESIS,
-    CLOSEPARANTHESIS,
-    OPENBRACE,
-    CLOSEBRACE,
-    OPENBRACKET,
-    CLOSEBRACKET,
-    NOT_IMPORTANT
+    OPEN_PARANTHESIS,
+    CLOSE_PARANTHESIS,
+    OPEN_BRACE,
+    CLOSE_BRACE,
+    OPEN_BRACKET,
+    CLOSE_BRACKET,
+    NOT_IMPORTANT,
+    UNRECOGNIZED
 };
-#line 602 "lexical_analyzer.cc"
+#line 604 "lexical_analyzer.cc"
 /* Don't generate the yyunput() function to prevent -Wall warning */
+/* Track line number for reporting purposes */
 /* Pattern definitions */
 
-#line 606 "lexical_analyzer.cc"
+#line 609 "lexical_analyzer.cc"
 
 #define INITIAL 0
 
@@ -817,16 +820,18 @@ YY_DECL
 		}
 
 	{
-#line 67 "lexical_analyzer.l"
+#line 70 "lexical_analyzer.l"
 
 
 
 
-#line 72 "lexical_analyzer.l"
-/* Rules section */
+#line 75 "lexical_analyzer.l"
+/* Rules section 
+   Defines the regex for the different tokens handled by this analyzer
+*/
 
 
-#line 830 "lexical_analyzer.cc"
+#line 835 "lexical_analyzer.cc"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -895,251 +900,254 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 75 "lexical_analyzer.l"
+#line 80 "lexical_analyzer.l"
 {return IF;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 77 "lexical_analyzer.l"
+#line 82 "lexical_analyzer.l"
 {return ELSE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 79 "lexical_analyzer.l"
+#line 84 "lexical_analyzer.l"
 {return WHILE;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 81 "lexical_analyzer.l"
+#line 86 "lexical_analyzer.l"
 {return DO;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 83 "lexical_analyzer.l"
+#line 88 "lexical_analyzer.l"
 {return FOR;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 85 "lexical_analyzer.l"
+#line 90 "lexical_analyzer.l"
 {return INT;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 87 "lexical_analyzer.l"
+#line 92 "lexical_analyzer.l"
 {return FLOAT;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 89 "lexical_analyzer.l"
+#line 94 "lexical_analyzer.l"
 {return CHAR;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 91 "lexical_analyzer.l"
+#line 96 "lexical_analyzer.l"
 {return VOID;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 93 "lexical_analyzer.l"
+#line 98 "lexical_analyzer.l"
 {return RETURN;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 95 "lexical_analyzer.l"
+#line 100 "lexical_analyzer.l"
 {return STRUCT;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 97 "lexical_analyzer.l"
+#line 102 "lexical_analyzer.l"
 {
     return ID;
 }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 101 "lexical_analyzer.l"
+#line 106 "lexical_analyzer.l"
 {
-    return INTLIT;
+    return INT_LIT;
 }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 105 "lexical_analyzer.l"
+#line 110 "lexical_analyzer.l"
 {
     // For floating point without exponents
-    return FPLIT;
+    return FP_LIT;
 }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 110 "lexical_analyzer.l"
+#line 115 "lexical_analyzer.l"
 {
     // For floating point with exponents
-    return FPLIT;
+    return FP_LIT;
 }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 115 "lexical_analyzer.l"
+#line 120 "lexical_analyzer.l"
 {
-    return CHARLIT;
+    return CHAR_LIT;
 }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 119 "lexical_analyzer.l"
+#line 124 "lexical_analyzer.l"
 {
-    return STRINGLIT;
+    return STRING_LIT;
 }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 123 "lexical_analyzer.l"
+#line 128 "lexical_analyzer.l"
 {return EQUAL;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 125 "lexical_analyzer.l"
+#line 130 "lexical_analyzer.l"
 {return PLUS;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 127 "lexical_analyzer.l"
+#line 132 "lexical_analyzer.l"
 {return MINUS;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 129 "lexical_analyzer.l"
+#line 134 "lexical_analyzer.l"
 {return STAR;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 131 "lexical_analyzer.l"
-{return FORWARDSLASH;}
+#line 136 "lexical_analyzer.l"
+{return FORWARD_SLASH;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 133 "lexical_analyzer.l"
+#line 138 "lexical_analyzer.l"
 {return PERCENT;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 135 "lexical_analyzer.l"
-{return EQUALEQUAL;}
+#line 140 "lexical_analyzer.l"
+{return EQUAL_EQUAL;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 137 "lexical_analyzer.l"
-{return NOTEQUAL;}
+#line 142 "lexical_analyzer.l"
+{return NOT_EQUAL;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 139 "lexical_analyzer.l"
-{return LESSTHAN;}
+#line 144 "lexical_analyzer.l"
+{return LESS_THAN;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 141 "lexical_analyzer.l"
-{return LESSTHANOREQUAL;}
+#line 146 "lexical_analyzer.l"
+{return LESS_THAN_OR_EQUAL;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 143 "lexical_analyzer.l"
-{return GREATERTHAN;}
+#line 148 "lexical_analyzer.l"
+{return GREATER_THAN;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 145 "lexical_analyzer.l"
-{return GREATERTHANOREQUAL;}
+#line 150 "lexical_analyzer.l"
+{return GREATER_THAN_OR_EQUAL;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 147 "lexical_analyzer.l"
+#line 152 "lexical_analyzer.l"
 {return AND;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 149 "lexical_analyzer.l"
+#line 154 "lexical_analyzer.l"
 {return OR;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 151 "lexical_analyzer.l"
+#line 156 "lexical_analyzer.l"
 {return COMMA;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 153 "lexical_analyzer.l"
+#line 158 "lexical_analyzer.l"
 {return PERIOD;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 155 "lexical_analyzer.l"
+#line 160 "lexical_analyzer.l"
 {return SEMICOLON;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 157 "lexical_analyzer.l"
-{return OPENPARANTHESIS;}
+#line 162 "lexical_analyzer.l"
+{return OPEN_PARANTHESIS;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 159 "lexical_analyzer.l"
-{return CLOSEPARANTHESIS;}
+#line 164 "lexical_analyzer.l"
+{return CLOSE_PARANTHESIS;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 161 "lexical_analyzer.l"
-{return OPENBRACE;}
+#line 166 "lexical_analyzer.l"
+{return OPEN_BRACE;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 163 "lexical_analyzer.l"
-{return CLOSEBRACE;}
+#line 168 "lexical_analyzer.l"
+{return CLOSE_BRACE;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 165 "lexical_analyzer.l"
-{return OPENBRACKET;}
+#line 170 "lexical_analyzer.l"
+{return OPEN_BRACKET;}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 167 "lexical_analyzer.l"
-{return CLOSEBRACKET;}
+#line 172 "lexical_analyzer.l"
+{return CLOSE_BRACKET;}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 169 "lexical_analyzer.l"
-{return NOT_IMPORTANT;}       
+#line 174 "lexical_analyzer.l"
+{
+    // NOT_IMPORTANT is a token type that isn't printed but still needs to be looked at for column number tracking
+    return NOT_IMPORTANT;
+}       
 	YY_BREAK
 case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
-#line 171 "lexical_analyzer.l"
+#line 179 "lexical_analyzer.l"
 {}       
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 173 "lexical_analyzer.l"
+#line 181 "lexical_analyzer.l"
 {return NOT_IMPORTANT;}
 	YY_BREAK
 case 44:
 /* rule 44 can match eol */
 YY_RULE_SETUP
-#line 175 "lexical_analyzer.l"
+#line 183 "lexical_analyzer.l"
 {return NOT_IMPORTANT;}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 177 "lexical_analyzer.l"
-{std::cout << "Unrecognized character: " << yytext << "\n";}
+#line 185 "lexical_analyzer.l"
+{return UNRECOGNIZED;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 180 "lexical_analyzer.l"
+#line 188 "lexical_analyzer.l"
 ECHO;
 	YY_BREAK
-#line 1143 "lexical_analyzer.cc"
+#line 1151 "lexical_analyzer.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2115,7 +2123,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 180 "lexical_analyzer.l"
+#line 188 "lexical_analyzer.l"
 
 
 
@@ -2123,85 +2131,101 @@ void yyfree (void * ptr )
 
 using namespace std;
 
+// Givens: Token to be evaluated
+// Returns: String name of token
+// Description: Determines the correct string name for the type of token being looked at
 string token_name(int tok){
     switch(tok) {
-        case IF:                 return "if"; break;
-        case ELSE:               return "else"; break;
-        case WHILE:              return "while"; break;
-        case DO:                 return "do"; break;
-        case FOR:                return "for"; break;
-        case INT:                return "int"; break;
-        case FLOAT:              return "float"; break;
-        case CHAR:               return "char"; break;
-        case VOID:               return "void"; break;
-        case RETURN:             return "return"; break;
-        case STRUCT:             return "struct"; break;
-        case ID:                 return "identifier"; break;
-        case INTLIT:             return "integer-literal"; break;  
-        case FPLIT:              return "floating-point-literal"; break;
-        case CHARLIT:            return "character-literal"; break;
-        case STRINGLIT:          return "string-literal"; break;
-        case EQUAL:              return "="; break;
-        case PLUS:               return "+"; break;
-        case MINUS:              return "-"; break;
-        case STAR:               return "*"; break;
-        case FORWARDSLASH:       return "/"; break;
-        case PERCENT:            return "%"; break;
-        case EQUALEQUAL:         return "=="; break;
-        case NOTEQUAL:           return "!="; break;
-        case LESSTHAN:           return "<"; break;
-        case LESSTHANOREQUAL:    return "<="; break;
-        case GREATERTHAN:        return ">"; break;
-        case GREATERTHANOREQUAL: return ">="; break;
-        case AND:                return "&&"; break;
-        case OR:                 return "||"; break;
-        case COMMA:              return ","; break;
-        case PERIOD:             return "."; break;
-        case SEMICOLON:          return ";"; break;
-        case OPENPARANTHESIS:    return "("; break;
-        case CLOSEPARANTHESIS:   return ")"; break;
-        case OPENBRACE:          return "{"; break;
-        case CLOSEBRACE:         return "}"; break;
-        case OPENBRACKET:        return "["; break;
-        case CLOSEBRACKET:       return "]"; break;
-        case NOT_IMPORTANT:      return "not important"; break;
-        default:                 return "????"; break;
+        case IF:                    return "if";                     break;
+        case ELSE:                  return "else";                   break;
+        case WHILE:                 return "while";                  break;
+        case DO:                    return "do";                     break;
+        case FOR:                   return "for";                    break;
+        case INT:                   return "int";                    break;
+        case FLOAT:                 return "float";                  break;
+        case CHAR:                  return "char";                   break;
+        case VOID:                  return "void";                   break;
+        case RETURN:                return "return";                 break;
+        case STRUCT:                return "struct";                 break;
+        case ID:                    return "identifier";             break;
+        case INT_LIT:               return "integer-literal";        break;  
+        case FP_LIT:                return "floating-point-literal"; break;
+        case CHAR_LIT:              return "character-literal";      break;
+        case STRING_LIT:            return "string-literal";         break;
+        case EQUAL:                 return "=";                      break;
+        case PLUS:                  return "+";                      break;
+        case MINUS:                 return "-";                      break;
+        case STAR:                  return "*";                      break;
+        case FORWARD_SLASH:         return "/";                      break;
+        case PERCENT:               return "%";                      break;
+        case EQUAL_EQUAL:           return "==";                     break;
+        case NOT_EQUAL:             return "!=";                     break;
+        case LESS_THAN:             return "<";                      break;
+        case LESS_THAN_OR_EQUAL:    return "<=";                     break;
+        case GREATER_THAN:          return ">";                      break;
+        case GREATER_THAN_OR_EQUAL: return ">=";                     break;
+        case AND:                   return "&&";                     break;
+        case OR:                    return "||";                     break;
+        case COMMA:                 return ",";                      break;
+        case PERIOD:                return ".";                      break;
+        case SEMICOLON:             return ";";                      break;
+        case OPEN_PARANTHESIS:      return "(";                      break;
+        case CLOSE_PARANTHESIS:     return ")";                      break;
+        case OPEN_BRACE:            return "{";                      break;
+        case CLOSE_BRACE:           return "}";                      break;
+        case OPEN_BRACKET:          return "[";                      break;
+        case CLOSE_BRACKET:         return "]";                      break;
+        case NOT_IMPORTANT:         return "not-important";          break;
+        case UNRECOGNIZED:          return "unrecognized";           break;
+        default:                    return "????";                   break;
     }
 }
 
+// Main function of code. Handles overall flow of lexical analysis
 int main(){
     // To hold current token
     int token;
+    // Track column number
     int column_num = 1;
+    // Used to track when there's a new line for column number reporting purposes
     int old_row_num = 1;
 
+    // Retrieving next token
     while ((token = yylex()) != 0) {
-
+        
+        // Obtain the type of token
+        string token_type = token_name(token);
+        
+        // Resetting column number on new lines
         if(yylineno != old_row_num){
             old_row_num = yylineno;
             column_num = 1;
         }
 
-        string token_type = token_name(token);
-
-        if(token_type == "not important"){
+        // If token is a comment or whitespace, still need to account for column number, but not print
+        if(token_type == "not-important"){
+            column_num += strlen(yytext);
+            continue;
+        }
+        
+        // If a token is unrecognized, inform the user
+        if(token_type == "unrecognized"){
+            cout << "Unrecognized character: " << yytext << ": " << yylineno << ", " << column_num << endl;
             column_num += strlen(yytext);
             continue;
         }
 
+        // Printing token, lexeme if needed, row number, and column number
         cout << token_type;
-        
         if(token_type == "identifier" || token_type == "integer-literal" || token_type == "floating-point-literal" || token_type == "character-literal" || token_type == "string-literal"){
             cout << ": " << yytext;
         }
-        
-        cout << ": " << yylineno << " " << column_num << "\n";
+        cout << ": " << yylineno << ", " << column_num << endl;
 
+        // Updating column number
         column_num += strlen(yytext);
         
     }
-
-    cout << "End of input.\n";
 
     // Freeing memory to prevent memory leaks
     yylex_destroy();
