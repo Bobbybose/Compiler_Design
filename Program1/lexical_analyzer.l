@@ -116,11 +116,11 @@ digits [0-9]
     return FP_LIT;
 }
 
-"'"."'" {
+("'"."'")|("'""\\""\'""'")|("'""\\""\\""'") {
     return CHAR_LIT;
 }
 
-"\""(.*)"\"" {
+(\")([^\"]|\\.)*(\") {
     return STRING_LIT;
 }
 
@@ -179,7 +179,7 @@ digits [0-9]
 
 ("//".*) {return NOT_IMPORTANT;}
 
-("/*"(.|\n)*"*/") {return NOT_IMPORTANT;}
+("/*")[^*]*("*")+([^/*][^*]*("*")+)*("/") {return NOT_IMPORTANT;}
 
 . {return UNRECOGNIZED;}
 
@@ -252,10 +252,11 @@ int main(){
 
     // Retrieving next token
     while ((token = yylex()) != 0) {
-        
         // Obtain the type of token
         string token_type = token_name(token);
         
+        //cout << "Lexeme: " << yytext << "   Token: " << token_type << endl;
+
         // Resetting column number on new lines
         if(yylineno != old_row_num){
             old_row_num = yylineno;

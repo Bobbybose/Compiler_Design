@@ -1,0 +1,3 @@
+string-literal: "abc": 1, 1
+string-literal: "here's a quotation mark: \"": 2, 1
+string-literal: "backslash: \\": 3, 1

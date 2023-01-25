@@ -1,0 +1,15 @@
+"Before comments"
+
+// This is a comment
+/* Block comment */
+/* Block
+comment
+on
+multiple
+lines
+*/
+
+</*comment*/=
+
+"After comments"
+
