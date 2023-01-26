@@ -29,6 +29,8 @@ No external packages required beyond Flex.
 ## How to Build
 To build, run 'make' or 'make all'
 
+'make clean' will remove executable and .cc file
+
 ## How to Run
 To run without input file, do './lexical_analyzer'
 
