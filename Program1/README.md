@@ -8,11 +8,11 @@
 
 **Assignment:** Program 1 - Lexicial Analyzer
 
-- This is a lexical analyzer designed to read in input and separate it into tokens.
+- This is a lexical analyzer designed to read in input and separate it into tokens
 
-- Code for program is based off of Dr. Moore's example.
+- Code for program is based off of Dr. Moore's example
 
-- Makefile is also written based off of Dr. Moore's example.
+- Makefile is also written based off of Dr. Moore's example
 
 - A set of tests is included in /tests in order to test different possibilities for every token type
 
@@ -32,7 +32,7 @@ To build, run 'make' or 'make all'
 ## How to Run
 To run without input file, do './lexical_analyzer'
 
-To run with input file, do './lexical_analyzer < input-file
+To run with input file, do './lexical_analyzer < input-file'
 
 ## Program Design
 Program consists of three main parts: declarations section, rules section, and user code section.
@@ -62,3 +62,4 @@ Program consists of three main parts: declarations section, rules section, and u
         
 
 ## Bugs/limitations
+No bugs currently present in code
