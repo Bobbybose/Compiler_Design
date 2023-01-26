@@ -1,10 +1,5 @@
 # CS541 Program 1 - Lexical Analyzer
 ## Description
-This is a lexical analyzer designed to read in input and separate it into tokens.
-Code for program is based off of Dr. Moore's example.
-Makefile is also written based off of Dr. Moore's example.
-A set of tests is included in /tests in order to test different possibilities for every token type
-
 **Author:** Bobby Bose
 
 **Final Version Date:** January 26, 2023
@@ -12,6 +7,14 @@ A set of tests is included in /tests in order to test different possibilities fo
 **Course:** CS541 - Compiler Design
 
 **Assignment:** Program 1 - Lexicial Analyzer
+
+-This is a lexical analyzer designed to read in input and separate it into tokens.
+
+-Code for program is based off of Dr. Moore's example.
+
+-Makefile is also written based off of Dr. Moore's example.
+
+-A set of tests is included in /tests in order to test different possibilities for every token type
 
 ## Citations
 **[Flex Manual](https://westes.github.io/flex/manual/)**
