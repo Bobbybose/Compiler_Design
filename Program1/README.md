@@ -1,6 +1,7 @@
 # CS541 Program 1 - Lexical Analyzer
 ## Description
 **Author:** Bobby Bose
+
 **Final Version Date:**
 **Course:** CS541 - Compiler Design
 **Assignment:** Program 1 - Lexicial Analyzer
