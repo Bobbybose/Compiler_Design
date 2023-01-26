@@ -2204,8 +2204,6 @@ int main(){
     while ((token = yylex()) != 0) {
         // Obtain the type of token
         string token_type = token_name(token);
-        
-        //cout << "Lexeme: " << yytext << "   Token: " << token_type << endl;
 
         // Resetting column number on new lines
         if(yylineno != old_row_num){
