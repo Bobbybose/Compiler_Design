@@ -9,13 +9,13 @@ all: $(BINARIES)
 .PRECIOUS: %.cc %.hh
 
 clean:
-	-rm $(BINARIES) parser.cc parser.hh lexer.cc parser.o lexer.o tree_node.o
+	-rm $(BINARIES) parser.cc parser.hh lexical_analyzer.cc parser.o lexical_analyzer.o tree_node.o
 
-calc-tree: parser.o lexer.o tree_node.o
+calc-tree: parser.o lexical_analyzer.o tree_node.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ -lfl
 
 # Make sure we build parser.hh before compiling the lexer
-lexer.o: lexer.cc parser.hh globals.h tree_node.h
+lexical_analyzer.o: lexical_analyzer.cc parser.hh globals.h tree_node.h
 
 # parser.hh comes from building parser.cc
 parser.hh: parser.cc
