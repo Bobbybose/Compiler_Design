@@ -78,7 +78,6 @@ digits [0-9]
 }
 
 {digits}+ {
-    std::cout << "digit" << std::endl;
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
     return INT_LIT;
@@ -230,6 +229,8 @@ digits [0-9]
     CurrColumn = 1;
     ++CurrLine;
     yylval = new tree_node("newline");
+
+    return '\n';
 }       
 
 ("//".*) {
@@ -255,7 +256,7 @@ digits [0-9]
     }
 }
 
-"" {
+""/. {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
     return EMPTY_STRING;

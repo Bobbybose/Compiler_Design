@@ -362,10 +362,10 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[85] =
     {   0,
-       37,   37,   40,   38,   33,   34,   38,   38,   38,   38,
-       29,   30,   17,   15,   27,   16,   38,   18,    9,   28,
+        0,    0,   40,   37,   33,   34,   37,   37,   37,   37,
+       29,   30,   17,   15,   27,   16,   37,   18,    9,   28,
        21,   14,   23,    8,    8,    8,    8,    8,    8,   31,
-       38,   32,   33,   20,    0,   13,    0,   25,    0,    0,
+       37,   32,   33,   20,    0,   13,    0,   25,    0,    0,
        10,    0,   35,   10,    9,    0,   22,   19,   24,    8,
         8,    8,    8,    8,    8,    1,    8,    8,   26,   12,
         0,    0,    0,   35,   10,    0,   11,    8,    8,    8,
@@ -883,7 +883,6 @@ case 9:
 YY_RULE_SETUP
 #line 81 "lexer.l"
 {
-    std::cout << "digit" << std::endl;
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
     return INT_LIT;
@@ -891,7 +890,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 88 "lexer.l"
+#line 87 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -900,7 +899,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 94 "lexer.l"
+#line 93 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -909,7 +908,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 100 "lexer.l"
+#line 99 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -918,7 +917,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 106 "lexer.l"
+#line 105 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -927,7 +926,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 112 "lexer.l"
+#line 111 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -936,7 +935,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 118 "lexer.l"
+#line 117 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -945,7 +944,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 124 "lexer.l"
+#line 123 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -954,7 +953,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 130 "lexer.l"
+#line 129 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -963,7 +962,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 136 "lexer.l"
+#line 135 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -972,7 +971,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 142 "lexer.l"
+#line 141 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -981,7 +980,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 148 "lexer.l"
+#line 147 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -990,7 +989,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 154 "lexer.l"
+#line 153 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -999,7 +998,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 160 "lexer.l"
+#line 159 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -1008,7 +1007,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 166 "lexer.l"
+#line 165 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -1017,7 +1016,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 172 "lexer.l"
+#line 171 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -1026,7 +1025,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 178 "lexer.l"
+#line 177 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -1035,7 +1034,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 184 "lexer.l"
+#line 183 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -1044,7 +1043,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 190 "lexer.l"
+#line 189 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -1053,7 +1052,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 196 "lexer.l"
+#line 195 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -1062,7 +1061,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 202 "lexer.l"
+#line 201 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -1071,7 +1070,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 208 "lexer.l"
+#line 207 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -1080,7 +1079,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 214 "lexer.l"
+#line 213 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -1089,7 +1088,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 220 "lexer.l"
+#line 219 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -1098,7 +1097,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 226 "lexer.l"
+#line 225 "lexer.l"
 {
     CurrColumn += yyleng;
 }       
@@ -1106,16 +1105,18 @@ YY_RULE_SETUP
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 230 "lexer.l"
+#line 229 "lexer.l"
 {
     CurrColumn = 1;
     ++CurrLine;
     yylval = new tree_node("newline");
+
+    return '\n';
 }       
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 236 "lexer.l"
+#line 237 "lexer.l"
 {
     CurrColumn = 1;
     CurrLine++;
@@ -1124,7 +1125,7 @@ YY_RULE_SETUP
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 241 "lexer.l"
+#line 242 "lexer.l"
 {
     bool contains_newline = false;
     // Checking if block has newlines
@@ -1144,8 +1145,11 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case 37:
+*yy_cp = (yy_hold_char); /* undo effects of setting up yytext */
+(yy_c_buf_p) = yy_cp -= 1;
+YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 259 "lexer.l"
+#line 260 "lexer.l"
 {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -1154,7 +1158,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 265 "lexer.l"
+#line 266 "lexer.l"
 {
     std::cout << "Nothing matches" << std::endl;
     CurrColumn += yyleng;
@@ -1163,10 +1167,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 270 "lexer.l"
+#line 271 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1170 "lexer.cc"
+#line 1174 "lexer.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2134,4 +2138,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 270 "lexer.l"
+#line 271 "lexer.l"

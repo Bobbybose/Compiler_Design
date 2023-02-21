@@ -11,7 +11,6 @@ void yylex_destroy();
 /* Report error messages */
 void yyerror(const char *msg)
 {
-	std::cout << "Here in error" << std::endl;
 	std::cerr << msg << " at line " << CurrLine << ", column "
 	          << CurrColumn << "\n";
 }
@@ -49,19 +48,19 @@ void yyerror(const char *msg)
 %%
 
 program: statementList {
-	std::cout << "At beginning" << std::endl;
+	//std::cout << "At beginning" << std::endl;
 	print_tree($1);
 	delete $1;
 	$$ = nullptr;
 };
 
-statementList: statementList statement {
-	$$ = new tree_node("statementList", $1, $2);
+statementList: /*statementList*/ statement '\n'{
+	$$ = new tree_node("statementList", $1, $2/*, $3*/);
 } | EMPTY_STRING {
-	$$ = new tree_node("statementList", $1);
+	$$ = new tree_node("EMPTY_STRING", $1);
+	//$$ = $1;
 } | error '\n' { 
 	$$ = new tree_node("ERROR", $2);
-	std::cout << "Here in error prod" << std::endl;
 	yyerrok; 
 }; 
 
@@ -92,7 +91,6 @@ type: INT {
 };
 
 expression: OPEN_PARANTHESIS expression CLOSE_PARANTHESIS {
-	std::cout << "First" << std::endl;
 	$$ = new tree_node("expression", $1, $2, $3);
 } | expression PLUS expression {
 	$$ = new tree_node("expression", $1, $2, $3);
@@ -123,7 +121,6 @@ expression: OPEN_PARANTHESIS expression CLOSE_PARANTHESIS {
 } | ID {
 	$$ = new tree_node("expression", $1);
 } | INT_LIT {
-	std::cout << "Int lit" << std::endl;
 	$$ = new tree_node("expression", $1);
 } | FP_LIT {
 	$$ = new tree_node("expression", $1);
