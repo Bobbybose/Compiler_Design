@@ -362,10 +362,10 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[85] =
     {   0,
-        0,    0,   40,   37,   33,   34,   37,   37,   37,   37,
-       29,   30,   17,   15,   27,   16,   37,   18,    9,   28,
+       37,   37,   40,   38,   33,   34,   38,   38,   38,   38,
+       29,   30,   17,   15,   27,   16,   38,   18,    9,   28,
        21,   14,   23,    8,    8,    8,    8,    8,    8,   31,
-       37,   32,   33,   20,    0,   13,    0,   25,    0,    0,
+       38,   32,   33,   20,    0,   13,    0,   25,    0,    0,
        10,    0,   35,   10,    9,    0,   22,   19,   24,    8,
         8,    8,    8,    8,    8,    1,    8,    8,   26,   12,
         0,    0,    0,   35,   10,    0,   11,    8,    8,    8,
@@ -1145,20 +1145,15 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case 37:
-*yy_cp = (yy_hold_char); /* undo effects of setting up yytext */
-(yy_c_buf_p) = yy_cp -= 1;
-YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
 #line 260 "lexer.l"
 {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return EMPTY_STRING;
 }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 266 "lexer.l"
+#line 264 "lexer.l"
 {
     std::cout << "Nothing matches" << std::endl;
     CurrColumn += yyleng;
@@ -1167,10 +1162,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 271 "lexer.l"
+#line 269 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1174 "lexer.cc"
+#line 1169 "lexer.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2138,4 +2133,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 271 "lexer.l"
+#line 269 "lexer.l"

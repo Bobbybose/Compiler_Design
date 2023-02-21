@@ -35,30 +35,32 @@ void yyerror(const char *msg)
 /* Which nonterminal is at the top of the parse tree? */
 %start program
 
+%left COMMA
+%right EQUAL
+%left OR
+%left AND
+%left EQUAL_EQUAL NOT_EQUAL
+%left LESS_THAN LESS_THAN_OR_EQUAL GREATER_THAN GREATER_THAN_OR_EQUAL
 %left PLUS MINUS
 %left STAR FORWARD_SLASH
-%left LESS_THAN LESS_THAN_OR_EQUAL GREATER_THAN GREATER_THAN_OR_EQUAL
-%left EQUAL_EQUAL NOT_EQUAL
-%left AND
-%left OR
-%right EQUAL
-%left COMMA
+
 %precedence ELSE
 
 %%
 
 program: statementList {
-	//std::cout << "At beginning" << std::endl;
 	print_tree($1);
 	delete $1;
 	$$ = nullptr;
 };
 
-statementList: /*statementList*/ statement '\n'{
-	$$ = new tree_node("statementList", $1, $2/*, $3*/);
-} | EMPTY_STRING {
-	$$ = new tree_node("EMPTY_STRING", $1);
-	//$$ = $1;
+statementList: statementList statement '\n'{
+	print_tree($2);
+	delete $2;
+	$$ = $1;
+	$$ = $2;
+} | {	// Empty string
+	$$ = nullptr;
 } | error '\n' { 
 	$$ = new tree_node("ERROR", $2);
 	yyerrok; 

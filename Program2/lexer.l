@@ -256,9 +256,7 @@ digits [0-9]
     }
 }
 
-""/. {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
+"" {
     return EMPTY_STRING;
 }
 
