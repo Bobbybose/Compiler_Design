@@ -58,7 +58,7 @@ statementList: statementList statement '\n'{
 	print_tree($2);
 	delete $2;
 	$$ = $1;
-	$$ = $2;
+	$$ = $3;
 } | {	// Empty string
 	$$ = nullptr;
 } | error '\n' { 
@@ -130,7 +130,25 @@ expression: OPEN_PARANTHESIS expression CLOSE_PARANTHESIS {
 	$$ = new tree_node("expression", $1);
 } | STRING_LIT {
 	$$ = new tree_node("expression", $1);
+} | ID OPEN_PARANTHESIS function_arg CLOSE_PARANTHESIS{
+	$$ = new tree_node("expression", $1, $2, $3, $4);
 }; 
+
+function_arg: {
+	$$ = nullptr;
+} | expression {
+	$$ = new tree_node("function_arg", $1);
+} | expression multiple_function_arg {
+	$$ = new tree_node("function_arg", $1, $2);
+};
+
+multiple_function_arg : COMMA multiple_function_arg  {
+	$$ = new tree_node("multiple_function_arg", $1, $2);
+} | expression {
+	$$ = new tree_node("multiple_function_arg", $1);
+} | expression COMMA multiple_function_arg{
+	$$ = new tree_node("multiple_function_arg", $1, $2, $3);
+};
 
 %%
 
