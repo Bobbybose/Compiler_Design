@@ -19,6 +19,7 @@ int CurrColumn = 1;
 
 
 ([0-9]*\.)?[0-9]+  {
+	std::cout << "digit" << std::endl;
 	CurrColumn += yyleng;
 	yylval = new tree_node(std::string("number: ") + yytext);
 	return NUMBER;

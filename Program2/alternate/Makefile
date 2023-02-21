@@ -1,8 +1,8 @@
-BINARIES = clukcs_parser
+BINARIES = calc-tree
 
 CXXFLAGS = -std=c++17 -Wall
 FLEXFLAGS = # You might want -8 and -F
-BISONFLAGS = -Wcounterexamples
+BISONFLAGS = 
 
 all: $(BINARIES)
 
@@ -11,7 +11,7 @@ all: $(BINARIES)
 clean:
 	-rm $(BINARIES) parser.cc parser.hh lexer.cc parser.o lexer.o tree_node.o
 
-clukcs_parser: parser.o lexer.o tree_node.o
+calc-tree: parser.o lexer.o tree_node.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ -lfl
 
 # Make sure we build parser.hh before compiling the lexer

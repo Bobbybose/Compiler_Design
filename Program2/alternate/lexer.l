@@ -1,17 +1,17 @@
-/* Declarations section */
 %{
-#include <iostream>
-#include <string>
-#include <stdlib.h>
+#include <iostream> // std::cerr
+#include <string>   // std::string
+#include <stdlib.h> // atof()
 #include "parser.hh"
 #include "globals.h"
 
 /* Global variables for current line and column. */
 int CurrLine = 1;
 int CurrColumn = 1;
+
 %}
 
-/* Don't generate the yyunput() function to prevent -Wall warning */
+/* Don't generate yyunput(), since we don't use it. */
 %option nounput
 
 
@@ -23,11 +23,42 @@ digits [0-9]
 %%
 
 
-%{
-/* Rules section 
-   Defines the regex for the different tokens handled by this analyzer
-*/
-%}
+([0-9]*\.)?[0-9]+  {
+	CurrColumn += yyleng;
+	yylval = new tree_node(std::string("number: ") + yytext);
+	return NUMBER;
+}
+
+[a-zA-Z] {
+	CurrColumn += yyleng;
+	yylval = new tree_node(std::string("var: ") + yytext);
+	return VAR;
+}
+
+
+"+"|"-"|"*"|"/"|"("|")"|"=" {
+	CurrColumn += yyleng;
+	yylval = new tree_node(yytext);
+
+	/* These tokens are represented by single characters as their
+	 * token ID.
+	 */
+	return yytext[0];
+}
+
+\n {
+	CurrColumn = 1;
+	++CurrLine;
+	yylval = new tree_node("newline");
+
+	/* Must return this, because it is part of the grammar */
+	return '\n';
+}
+
+	/* Skip horizontal whitespace entirely */
+[ \t]+ {
+	CurrColumn += yyleng;
+}
 
 "if" {
     CurrColumn += yyleng;
@@ -70,12 +101,6 @@ digits [0-9]
     return ID;
 }
 
-{digits}+ {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return INT_LIT;
-}
-
 ({digits}*"."{digits}+)|({digits}+"."{digits}*) {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
@@ -99,36 +124,6 @@ digits [0-9]
 	yylval = new tree_node(yytext);
     return STRING_LIT;
 }
-
-"=" {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return EQUAL;}
-
-"+" {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return PLUS;}
-
-"-" {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return MINUS;}
-
-"*" {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return STAR;}
-
-"/" {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return FORWARD_SLASH;}
-
-"%" {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return PERCENT;}
 
 "==" {
     CurrColumn += yyleng;
@@ -170,30 +165,10 @@ digits [0-9]
 	yylval = new tree_node(yytext);
     return OR;}
 
-"," {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return COMMA;}
-
-"." {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return PERIOD;}
-
 ";" {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
     return SEMICOLON;}
-
-"(" {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return OPEN_PARANTHESIS;}
-
-")" {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return CLOSE_PARANTHESIS;}
 
 "{" {
     CurrColumn += yyleng;
@@ -205,26 +180,6 @@ digits [0-9]
 	yylval = new tree_node(yytext);
     return CLOSE_BRACE;}
 
-"[" {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return OPEN_BRACKET;}
-
-"]" {
-    CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
-    return CLOSE_BRACKET;}
-
-[ \t\r]+ {
-    CurrColumn += yyleng;
-}       
-
-\n {
-    CurrColumn = 1;
-    ++CurrLine;
-    yylval = new tree_node("newline");
-}       
-
 ("//".*) {
     CurrColumn = 1;
     CurrLine++;
@@ -233,7 +188,7 @@ digits [0-9]
 ("/*")[^*]*("*")+([^/*][^*]*("*")+)*("/") {
     bool contains_newline = false;
     // Checking if block has newlines
-    for( int i = 0; i < yytext.length(), i++){
+    for( int i = 0; i < yyleng; i++){
         if(yytext[i] == '\n'){
             contains_newline = true;
         }
@@ -251,10 +206,10 @@ digits [0-9]
 "" {
     CurrColumn += yyleng;
 	yylval = new tree_node(yytext);
-    return EMPTY_STRING
+    return EMPTY_STRING;
 }
 
-. {
-    CurrColum += yyleng;
-    std::cerr << "Unrecognized character: " << yytext << "\n";
+. {        /* Anything else.  Must be the last rule! */
+	CurrColumn += yyleng;
+	std::cerr << "Unrecognized character: " << yytext << "\n";
 }
