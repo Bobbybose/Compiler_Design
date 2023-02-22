@@ -740,27 +740,26 @@ case 1:
 YY_RULE_SETUP
 #line 21 "lexer.l"
 {
-	std::cout << "digit" << std::endl;
+	yylval = new tree_node(std::string("number: ") + yytext, CurrColumn, CurrLine);
 	CurrColumn += yyleng;
-	yylval = new tree_node(std::string("number: ") + yytext);
 	return NUMBER;
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 28 "lexer.l"
+#line 27 "lexer.l"
 {
+	yylval = new tree_node(std::string("var: ") + yytext, CurrColumn, CurrLine);
 	CurrColumn += yyleng;
-	yylval = new tree_node(std::string("var: ") + yytext);
 	return VAR;
 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 35 "lexer.l"
+#line 34 "lexer.l"
 {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
 	CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
 
 	/* These tokens are represented by single characters as their
 	 * token ID.
@@ -771,11 +770,11 @@ YY_RULE_SETUP
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 45 "lexer.l"
+#line 44 "lexer.l"
 {
+	yylval = new tree_node("newline", CurrColumn, CurrLine);
 	CurrColumn = 1;
-	++CurrLine;
-	yylval = new tree_node("newline");
+	//++CurrLine;
 
 	/* Must return this, because it is part of the grammar */
 	return '\n';
@@ -784,14 +783,14 @@ YY_RULE_SETUP
 /* Skip horizontal whitespace entirely */
 case 5:
 YY_RULE_SETUP
-#line 55 "lexer.l"
+#line 54 "lexer.l"
 {
 	CurrColumn += yyleng;
 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 59 "lexer.l"
+#line 58 "lexer.l"
 {        /* Anything else.  Must be the last rule! */
 	CurrColumn += yyleng;
 	std::cerr << "Unrecognized character: " << yytext << "\n";
@@ -799,10 +798,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 63 "lexer.l"
+#line 62 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 806 "lexer.cc"
+#line 805 "lexer.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1770,4 +1769,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 63 "lexer.l"
+#line 62 "lexer.l"

@@ -95,7 +95,7 @@ void print_tree(const tree_node *root, int depth)
 	if (depth > 0)
 		std::cout << "+-- ";
 
-	std::cout << root->label << std::endl;
+	std::cout << root->label << ": " << root->CurrLine << "," << root->CurrColumn << std::endl;
 
 	/* Print the children, separated by vertial lines.  For example, if
 	 * depth == 1 (so the children are depth 2), this should give:

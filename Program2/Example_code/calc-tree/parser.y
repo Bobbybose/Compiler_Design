@@ -48,38 +48,41 @@ input: statement {
 };
 
 statement: expression '\n' {
-	$$ = new tree_node("statement", $1, $2);
+	$$ = new tree_node("statement", CurrColumn, CurrLine, $1, $2);
+	++CurrLine;
 } | VAR '=' expression '\n' {
-	$$ = new tree_node("statement", $1, $2, $3, $4);
+	$$ = new tree_node("statement", CurrColumn, CurrLine, $1, $2, $3, $4);
+	++CurrLine;
 } | error '\n' { // error is a special token defined by bison
-	$$ = new tree_node("ERROR", $2);
+	$$ = new tree_node("ERROR", CurrColumn, CurrLine, $2);
+	++CurrLine;
 	yyerrok; // Mark that we handled the error (and don't abort).
 };
 
 expression: expression '+' term {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", CurrColumn, CurrLine, $1, $2, $3);
 } | expression '-' term {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", CurrColumn, CurrLine, $1, $2, $3);
 } | term {
-	$$ = new tree_node("expression", $1);
+	$$ = new tree_node("expression", CurrColumn, CurrLine, $1);
 };
 
 term: term '*' factor {
-	$$ = new tree_node("term", $1, $2, $3);
+	$$ = new tree_node("term", CurrColumn, CurrLine, $1, $2, $3);
 } | term '/' factor {
-	$$ = new tree_node("term", $1, $2, $3);
+	$$ = new tree_node("term", CurrColumn, CurrLine, $1, $2, $3);
 } | factor {
-	$$ = new tree_node("term", $1);
+	$$ = new tree_node("term", CurrColumn, CurrLine, $1);
 };
 
 factor: '-' factor {
-	$$ = new tree_node("factor", $1, $2);
+	$$ = new tree_node("factor", CurrColumn, CurrLine, $1, $2);
 } | '(' expression ')' {
-	$$ = new tree_node("factor", $1, $2, $3);
+	$$ = new tree_node("factor", CurrColumn, CurrLine, $1, $2, $3);
 } | NUMBER {
-	$$ = new tree_node("factor", $1);
+	$$ = new tree_node("factor", CurrColumn, CurrLine, $1);
 } | VAR {
-	$$ = new tree_node("factor", $1);
+	$$ = new tree_node("factor", CurrColumn, CurrLine, $1);
 };
 
 

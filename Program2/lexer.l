@@ -30,194 +30,194 @@ digits [0-9]
 %}
 
 "if" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return IF;
 }
 
 "else" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return ELSE;
 }
 
 "while" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return WHILE;
 }
 
 "for" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return FOR;
 }
 
 "int" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return INT;
 }
 
 "float" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return FLOAT;
 }
 
 "char" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return CHAR;
 }
 
 ({alpha}|_)+({alpha}|{digits}|_)* {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return ID;
 }
 
 {digits}+ {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return INT_LIT;
 }
 
 ({digits}*"."{digits}+)|({digits}+"."{digits}*) {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return FP_LIT;
 }
 
 (({digits}*"."?{digits}+)|({digits}+"."{digits}*))("e"|"E")("+"|"-")?{digits}+ {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return FP_LIT;
 }
 
 '[^\n'\\]'|'\\.' {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return CHAR_LIT;
 }
 
 \"([^\n"\\]|\\.)*\" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return STRING_LIT;
 }
 
 "=" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return EQUAL;
 }
 
 "+" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return PLUS;
 }
 
 "-" {
+    yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return MINUS;
 }
 
 "*" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return STAR;
 }
 
 "/" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return FORWARD_SLASH;
 }
 
 "==" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return EQUAL_EQUAL;
 }
 
 "!=" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return NOT_EQUAL;
 }
 
 "<" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return LESS_THAN;
 }
 
 "<=" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return LESS_THAN_OR_EQUAL;
 }
 
 ">" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return GREATER_THAN;
 }
 
 ">=" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return GREATER_THAN_OR_EQUAL;
 }
 
 "&&" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return AND;
 }
 
 "||" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return OR;
 }
 
 "," {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return COMMA;
 }
 
 ";" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return SEMICOLON;
 }
 
 "(" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return OPEN_PARANTHESIS;
 }
 
 ")" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return CLOSE_PARANTHESIS;
 }
 
 "{" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return OPEN_BRACE;
 }
 
 "}" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
     CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
     return CLOSE_BRACE;
 }
 
@@ -226,9 +226,9 @@ digits [0-9]
 }       
 
 \n {
+    yylval = new tree_node("newline", CurrColumn, CurrLine);
     CurrColumn = 1;
     ++CurrLine;
-    yylval = new tree_node("newline");
 
     return '\n';
 }       
@@ -261,7 +261,6 @@ digits [0-9]
 }
 
 . {
-    std::cout << "Nothing matches" << std::endl;
     CurrColumn += yyleng;
     std::cerr << "Unrecognized character: " << yytext << "\n";
 }

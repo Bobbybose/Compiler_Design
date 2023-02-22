@@ -517,8 +517,8 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    40,    40,    44,    50,    52,    54,    59,    61,    63,
-      67,    69,    71,    75,    77,    79,    81
+       0,    40,    40,    44,    50,    53,    56,    62,    64,    66,
+      70,    72,    74,    78,    80,    82,    84
 };
 #endif
 
@@ -1206,110 +1206,113 @@ yyreduce:
   case 4: /* statement: expression '\n'  */
 #line 50 "parser.y"
                            {
-	yyval = new tree_node("statement", yyvsp[-1], yyvsp[0]);
+	yyval = new tree_node("statement", CurrColumn, CurrLine, yyvsp[-1], yyvsp[0]);
+	++CurrLine;
 }
-#line 1212 "parser.cc"
+#line 1213 "parser.cc"
     break;
 
   case 5: /* statement: VAR '=' expression '\n'  */
-#line 52 "parser.y"
+#line 53 "parser.y"
                             {
-	yyval = new tree_node("statement", yyvsp[-3], yyvsp[-2], yyvsp[-1], yyvsp[0]);
+	yyval = new tree_node("statement", CurrColumn, CurrLine, yyvsp[-3], yyvsp[-2], yyvsp[-1], yyvsp[0]);
+	++CurrLine;
 }
-#line 1220 "parser.cc"
+#line 1222 "parser.cc"
     break;
 
   case 6: /* statement: error '\n'  */
-#line 54 "parser.y"
+#line 56 "parser.y"
                { // error is a special token defined by bison
-	yyval = new tree_node("ERROR", yyvsp[0]);
+	yyval = new tree_node("ERROR", CurrColumn, CurrLine, yyvsp[0]);
+	++CurrLine;
 	yyerrok; // Mark that we handled the error (and don't abort).
 }
-#line 1229 "parser.cc"
+#line 1232 "parser.cc"
     break;
 
   case 7: /* expression: expression '+' term  */
-#line 59 "parser.y"
+#line 62 "parser.y"
                                 {
-	yyval = new tree_node("expression", yyvsp[-2], yyvsp[-1], yyvsp[0]);
+	yyval = new tree_node("expression", CurrColumn, CurrLine, yyvsp[-2], yyvsp[-1], yyvsp[0]);
 }
-#line 1237 "parser.cc"
+#line 1240 "parser.cc"
     break;
 
   case 8: /* expression: expression '-' term  */
-#line 61 "parser.y"
+#line 64 "parser.y"
                         {
-	yyval = new tree_node("expression", yyvsp[-2], yyvsp[-1], yyvsp[0]);
+	yyval = new tree_node("expression", CurrColumn, CurrLine, yyvsp[-2], yyvsp[-1], yyvsp[0]);
 }
-#line 1245 "parser.cc"
+#line 1248 "parser.cc"
     break;
 
   case 9: /* expression: term  */
-#line 63 "parser.y"
+#line 66 "parser.y"
          {
-	yyval = new tree_node("expression", yyvsp[0]);
+	yyval = new tree_node("expression", CurrColumn, CurrLine, yyvsp[0]);
 }
-#line 1253 "parser.cc"
+#line 1256 "parser.cc"
     break;
 
   case 10: /* term: term '*' factor  */
-#line 67 "parser.y"
+#line 70 "parser.y"
                       {
-	yyval = new tree_node("term", yyvsp[-2], yyvsp[-1], yyvsp[0]);
+	yyval = new tree_node("term", CurrColumn, CurrLine, yyvsp[-2], yyvsp[-1], yyvsp[0]);
 }
-#line 1261 "parser.cc"
+#line 1264 "parser.cc"
     break;
 
   case 11: /* term: term '/' factor  */
-#line 69 "parser.y"
+#line 72 "parser.y"
                     {
-	yyval = new tree_node("term", yyvsp[-2], yyvsp[-1], yyvsp[0]);
+	yyval = new tree_node("term", CurrColumn, CurrLine, yyvsp[-2], yyvsp[-1], yyvsp[0]);
 }
-#line 1269 "parser.cc"
+#line 1272 "parser.cc"
     break;
 
   case 12: /* term: factor  */
-#line 71 "parser.y"
+#line 74 "parser.y"
            {
-	yyval = new tree_node("term", yyvsp[0]);
+	yyval = new tree_node("term", CurrColumn, CurrLine, yyvsp[0]);
 }
-#line 1277 "parser.cc"
+#line 1280 "parser.cc"
     break;
 
   case 13: /* factor: '-' factor  */
-#line 75 "parser.y"
+#line 78 "parser.y"
                    {
-	yyval = new tree_node("factor", yyvsp[-1], yyvsp[0]);
+	yyval = new tree_node("factor", CurrColumn, CurrLine, yyvsp[-1], yyvsp[0]);
 }
-#line 1285 "parser.cc"
+#line 1288 "parser.cc"
     break;
 
   case 14: /* factor: '(' expression ')'  */
-#line 77 "parser.y"
+#line 80 "parser.y"
                        {
-	yyval = new tree_node("factor", yyvsp[-2], yyvsp[-1], yyvsp[0]);
+	yyval = new tree_node("factor", CurrColumn, CurrLine, yyvsp[-2], yyvsp[-1], yyvsp[0]);
 }
-#line 1293 "parser.cc"
+#line 1296 "parser.cc"
     break;
 
   case 15: /* factor: NUMBER  */
-#line 79 "parser.y"
+#line 82 "parser.y"
            {
-	yyval = new tree_node("factor", yyvsp[0]);
+	yyval = new tree_node("factor", CurrColumn, CurrLine, yyvsp[0]);
 }
-#line 1301 "parser.cc"
+#line 1304 "parser.cc"
     break;
 
   case 16: /* factor: VAR  */
-#line 81 "parser.y"
+#line 84 "parser.y"
         {
-	yyval = new tree_node("factor", yyvsp[0]);
+	yyval = new tree_node("factor", CurrColumn, CurrLine, yyvsp[0]);
 }
-#line 1309 "parser.cc"
+#line 1312 "parser.cc"
     break;
 
 
-#line 1313 "parser.cc"
+#line 1316 "parser.cc"
 
       default: break;
     }
@@ -1502,7 +1505,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 86 "parser.y"
+#line 89 "parser.y"
 
 
 int main()

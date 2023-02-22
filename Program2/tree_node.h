@@ -23,8 +23,8 @@ struct tree_node
 	//
 	// Call as: tree_node *node = new tree_node("label", child1, child2);
 	template<typename... Args>
-	tree_node(const std::string &label, Args... children)
-		: label(label), children{children...}
+	tree_node(const std::string &label, int CurrColumn, int CurrLine, Args... children)
+		: label(label), CurrColumn(CurrColumn), CurrLine(CurrLine), children{children...}
 	{}
 
 	// By the rule of five, if we define one of these, we should define
@@ -45,6 +45,8 @@ struct tree_node
 
 	// Data members
 	std::string label;
+	int CurrColumn;
+	int CurrLine; 
 	std::vector<tree_node *> children;
 };
 

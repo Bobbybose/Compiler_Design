@@ -19,21 +19,21 @@ int CurrColumn = 1;
 
 
 ([0-9]*\.)?[0-9]+  {
+	yylval = new tree_node(std::string("number: ") + yytext, CurrColumn, CurrLine);
 	CurrColumn += yyleng;
-	yylval = new tree_node(std::string("number: ") + yytext);
 	return NUMBER;
 }
 
 [a-zA-Z] {
+	yylval = new tree_node(std::string("var: ") + yytext, CurrColumn, CurrLine);
 	CurrColumn += yyleng;
-	yylval = new tree_node(std::string("var: ") + yytext);
 	return VAR;
 }
 
 
 "+"|"-"|"*"|"/"|"("|")"|"=" {
+	yylval = new tree_node(yytext, CurrColumn, CurrLine);
 	CurrColumn += yyleng;
-	yylval = new tree_node(yytext);
 
 	/* These tokens are represented by single characters as their
 	 * token ID.
@@ -42,9 +42,9 @@ int CurrColumn = 1;
 }
 
 \n {
+	yylval = new tree_node("newline", CurrColumn, CurrLine);
 	CurrColumn = 1;
-	++CurrLine;
-	yylval = new tree_node("newline");
+	//++CurrLine;
 
 	/* Must return this, because it is part of the grammar */
 	return '\n';

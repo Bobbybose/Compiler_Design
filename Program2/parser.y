@@ -44,7 +44,6 @@ void yyerror(const char *msg)
 %left PLUS MINUS
 %left STAR FORWARD_SLASH
 
-%precedence ELSE
 
 %%
 
@@ -62,92 +61,92 @@ statementList: statementList statement '\n'{
 } | {	// Empty string
 	$$ = nullptr;
 } | error '\n' { 
-	$$ = new tree_node("ERROR", $2);
+	$$ = new tree_node("ERROR", CurrColumn, CurrLine, $2);
 	yyerrok; 
 }; 
 
 statement: OPEN_BRACE statementList CLOSE_BRACE {
-	$$ = new tree_node("statement", $1, $2, $3);
+	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | type ID EQUAL expression SEMICOLON {
-	$$ = new tree_node("statement", $1, $2, $3, $4, $5);
+	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3, $4, $5);
 } | type ID SEMICOLON {
-	$$ = new tree_node("statement", $1, $2, $3);
+	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression SEMICOLON {
-	$$ = new tree_node("statement", $1, $2);
+	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2);
 } | WHILE OPEN_PARANTHESIS expression CLOSE_PARANTHESIS statement {
-	$$ = new tree_node("statement", $1, $2, $3, $4, $5);
+	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3, $4, $5);
 } | IF OPEN_PARANTHESIS expression CLOSE_PARANTHESIS statement {
-	$$ = new tree_node("statement", $1, $2, $3, $4, $5);
-} | IF OPEN_PARANTHESIS expression CLOSE_PARANTHESIS statement ELSE statement {
-	$$ = new tree_node("statement", $1, $2, $3, $4, $5, $6, $7);
+	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3, $4, $5);
+} | IF OPEN_PARANTHESIS expression CLOSE_PARANTHESIS statement ELSE statement %prec ELSE{
+	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3, $4, $5, $6, $7);
 } | FOR OPEN_PARANTHESIS expression SEMICOLON expression SEMICOLON expression CLOSE_PARANTHESIS statement {
-	$$ = new tree_node("statement", $1, $2, $3, $4, $5, $6, $7, $8, $9);
+	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3, $4, $5, $6, $7, $8, $9);
 };
 
 type: INT {
-	$$ = new tree_node("type", $1);
+	$$ = new tree_node("type", $1->CurrColumn, CurrLine, $1);
 } | FLOAT {
-	$$ = new tree_node("type", $1);
+	$$ = new tree_node("type", $1->CurrColumn, CurrLine, $1);
 } | CHAR {
-	$$ = new tree_node("type", $1);
+	$$ = new tree_node("type", $1->CurrColumn, CurrLine, $1);
 };
 
 expression: OPEN_PARANTHESIS expression CLOSE_PARANTHESIS {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression PLUS expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression MINUS expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression STAR expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression FORWARD_SLASH expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression EQUAL expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression AND expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression OR expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression LESS_THAN expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression LESS_THAN_OR_EQUAL expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression GREATER_THAN expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression GREATER_THAN_OR_EQUAL expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression EQUAL_EQUAL expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression NOT_EQUAL expression {
-	$$ = new tree_node("expression", $1, $2, $3);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | ID {
-	$$ = new tree_node("expression", $1);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1);
 } | INT_LIT {
-	$$ = new tree_node("expression", $1);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1);
 } | FP_LIT {
-	$$ = new tree_node("expression", $1);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1);
 } | CHAR_LIT {
-	$$ = new tree_node("expression", $1);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1);
 } | STRING_LIT {
-	$$ = new tree_node("expression", $1);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1);
 } | ID OPEN_PARANTHESIS function_arg CLOSE_PARANTHESIS{
-	$$ = new tree_node("expression", $1, $2, $3, $4);
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3, $4);
 }; 
 
 function_arg: {
 	$$ = nullptr;
 } | expression {
-	$$ = new tree_node("function_arg", $1);
+	$$ = new tree_node("function_arg", $1->CurrColumn, CurrLine, $1);
 } | expression multiple_function_arg {
-	$$ = new tree_node("function_arg", $1, $2);
+	$$ = new tree_node("function_arg", $1->CurrColumn, CurrLine, $1, $2);
 };
 
 multiple_function_arg : COMMA multiple_function_arg  {
-	$$ = new tree_node("multiple_function_arg", $1, $2);
+	$$ = new tree_node("multiple_function_arg", $1->CurrColumn, CurrLine, $1, $2);
 } | expression {
-	$$ = new tree_node("multiple_function_arg", $1);
+	$$ = new tree_node("multiple_function_arg", $1->CurrColumn, CurrLine, $1);
 } | expression COMMA multiple_function_arg{
-	$$ = new tree_node("multiple_function_arg", $1, $2, $3);
+	$$ = new tree_node("multiple_function_arg", $1->CurrColumn, CurrLine, $1, $2, $3);
 };
 
 %%
