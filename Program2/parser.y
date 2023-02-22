@@ -27,7 +27,7 @@ void yyerror(const char *msg)
 /* What are the tokens?  Since we aren't using %union, we don't
  * have to specify their types.
  */
-%token IF ELSE WHILE FOR INT FLOAT CHAR ID INT_LIT FP_LIT CHAR_LIT STRING_LIT EQUAL PLUS MINUS STAR FORWARD_SLASH EQUAL_EQUAL NOT_EQUAL LESS_THAN LESS_THAN_OR_EQUAL GREATER_THAN GREATER_THAN_OR_EQUAL AND OR COMMA SEMICOLON OPEN_PARANTHESIS CLOSE_PARANTHESIS OPEN_BRACE CLOSE_BRACE EMPTY_STRING '\n'
+%token IF ELSE WHILE FOR INT FLOAT CHAR ID INT_LIT FP_LIT CHAR_LIT STRING_LIT EQUAL PLUS MINUS STAR FORWARD_SLASH EQUAL_EQUAL NOT_EQUAL LESS_THAN LESS_THAN_OR_EQUAL GREATER_THAN GREATER_THAN_OR_EQUAL AND OR COMMA SEMICOLON OPEN_PARANTHESIS CLOSE_PARANTHESIS OPEN_BRACE CLOSE_BRACE EMPTY_STRING '\n' NO_MATCH
 
 /* How to free discarded tokens during error recovery. */
 %destructor { delete $$; } <>
@@ -47,23 +47,23 @@ void yyerror(const char *msg)
 
 %%
 
-program: statementList {
+program: statementList '\n' {
+	$$ = new tree_node("program", $1->CurrColumn, CurrLine, $1, $2);
 	print_tree($1);
 	delete $1;
 	$$ = nullptr;
-};
-
-statementList: statementList statement '\n'{
+} | program statementList '\n' {
+	$$ = new tree_node("program", $2->CurrColumn, CurrLine, $1, $2, $3);
 	print_tree($2);
 	delete $2;
 	$$ = $1;
-	$$ = $3;
-} | {	// Empty string
-	$$ = nullptr;
-} | error '\n' { 
-	$$ = new tree_node("ERROR", CurrColumn, CurrLine, $2);
-	yyerrok; 
-}; 
+}
+
+statementList: statementList statement {
+	$$ = new tree_node("statementList", $1->CurrColumn, CurrLine, $1, $2);
+} | {
+	$$ = new tree_node("statementList (EMPTY STRING)", CurrColumn, CurrLine);
+};
 
 statement: OPEN_BRACE statementList CLOSE_BRACE {
 	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3);
@@ -81,6 +81,9 @@ statement: OPEN_BRACE statementList CLOSE_BRACE {
 	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3, $4, $5, $6, $7);
 } | FOR OPEN_PARANTHESIS expression SEMICOLON expression SEMICOLON expression CLOSE_PARANTHESIS statement {
 	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3, $4, $5, $6, $7, $8, $9);
+} | error SEMICOLON { 	
+	$$ = new tree_node("statement (ERROR)", $1->CurrColumn, CurrLine, $2);
+	yyerrok; 
 };
 
 type: INT {

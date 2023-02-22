@@ -38,10 +38,12 @@ void yyerror(const char *msg)
 %%
 
 input: statement {
+	std::cout << "print 1" << std::endl;
 	print_tree($1);
 	delete $1;
 	$$ = nullptr; // Avoid a warning.
 } | input statement {
+	std::cout << "print 2" << std::endl;
 	print_tree($2);
 	delete $2;
 	$$ = $1;  // Avoid two warnings.

@@ -263,4 +263,6 @@ digits [0-9]
 . {
     CurrColumn += yyleng;
     std::cerr << "Unrecognized character: " << yytext << "\n";
+
+    return NO_MATCH;
 }
