@@ -2,7 +2,7 @@ BINARIES = clukcs_parser
 
 CXXFLAGS = -std=c++17 -Wall
 FLEXFLAGS = # You might want -8 and -F
-BISONFLAGS = #-Wcounterexamples
+BISONFLAGS = -Wcounterexamples
 
 all: $(BINARIES)
 

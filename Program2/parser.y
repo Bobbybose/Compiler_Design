@@ -2,9 +2,6 @@
 #include <iostream> // cerr, cout
 #include "globals.h"
 
-/* Note: C and C++ zero-initialize global variables. */
-double variables[256];
-
 /* Prototype for a function defined by flex. */
 void yylex_destroy();
 
@@ -27,7 +24,7 @@ void yyerror(const char *msg)
 /* What are the tokens?  Since we aren't using %union, we don't
  * have to specify their types.
  */
-%token IF ELSE WHILE FOR INT FLOAT CHAR ID INT_LIT FP_LIT CHAR_LIT STRING_LIT EQUAL PLUS MINUS STAR FORWARD_SLASH EQUAL_EQUAL NOT_EQUAL LESS_THAN LESS_THAN_OR_EQUAL GREATER_THAN GREATER_THAN_OR_EQUAL AND OR COMMA SEMICOLON OPEN_PARANTHESIS CLOSE_PARANTHESIS OPEN_BRACE CLOSE_BRACE EMPTY_STRING '\n' NO_MATCH
+%token IF ELSE WHILE FOR INT FLOAT CHAR ID INT_LIT FP_LIT CHAR_LIT STRING_LIT EQUAL PLUS MINUS STAR FORWARD_SLASH EQUAL_EQUAL NOT_EQUAL LESS_THAN LESS_THAN_OR_EQUAL GREATER_THAN GREATER_THAN_OR_EQUAL AND OR COMMA SEMICOLON OPEN_PARANTHESIS CLOSE_PARANTHESIS OPEN_BRACE CLOSE_BRACE '\n'
 
 /* How to free discarded tokens during error recovery. */
 %destructor { delete $$; } <>
@@ -44,25 +41,32 @@ void yyerror(const char *msg)
 %left PLUS MINUS
 %left STAR FORWARD_SLASH
 
+%precedence THEN
+%precedence ELSE
 
 %%
 
 program: statementList '\n' {
-	$$ = new tree_node("program", $1->CurrColumn, CurrLine, $1, $2);
 	print_tree($1);
 	delete $1;
+	delete $2;
 	$$ = nullptr;
+	CurrLine++;
 } | program statementList '\n' {
-	$$ = new tree_node("program", $2->CurrColumn, CurrLine, $1, $2, $3);
 	print_tree($2);
 	delete $2;
+	delete $3;
 	$$ = $1;
+	CurrLine++;
 }
 
 statementList: statementList statement {
 	$$ = new tree_node("statementList", $1->CurrColumn, CurrLine, $1, $2);
 } | {
-	$$ = new tree_node("statementList (EMPTY STRING)", CurrColumn, CurrLine);
+	if(CurrLine==1)
+		$$ = new tree_node("statementList (EMPTY STRING)", CurrColumn, CurrLine);
+	else
+		$$ = new tree_node("statementList (EMPTY STRING)", CurrColumn-1, CurrLine);
 };
 
 statement: OPEN_BRACE statementList CLOSE_BRACE {
@@ -75,9 +79,9 @@ statement: OPEN_BRACE statementList CLOSE_BRACE {
 	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2);
 } | WHILE OPEN_PARANTHESIS expression CLOSE_PARANTHESIS statement {
 	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3, $4, $5);
-} | IF OPEN_PARANTHESIS expression CLOSE_PARANTHESIS statement {
+} | IF OPEN_PARANTHESIS expression CLOSE_PARANTHESIS statement %prec THEN {
 	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3, $4, $5);
-} | IF OPEN_PARANTHESIS expression CLOSE_PARANTHESIS statement ELSE statement %prec ELSE{
+} | IF OPEN_PARANTHESIS expression CLOSE_PARANTHESIS statement ELSE statement {
 	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3, $4, $5, $6, $7);
 } | FOR OPEN_PARANTHESIS expression SEMICOLON expression SEMICOLON expression CLOSE_PARANTHESIS statement {
 	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3, $4, $5, $6, $7, $8, $9);

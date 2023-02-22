@@ -1,0 +1,65 @@
+statementList: 1,1
+|   
++-- statementList (EMPTY STRING): 1,1
+|   
++-- statement: 1,1
+|   |   
+|   +-- type: 1,1
+|   |   |   
+|   |   +-- int: 1,1
+|   |   |   
+|   |   *   
+|   |   
+|   +-- apple: 1,5
+|   |   
+|   +-- ;: 1,10
+|   |   
+|   *   
+|   
+*   
+statementList: 2,5
+|   
++-- statementList (EMPTY STRING): 2,5
+|   
++-- statement: 2,1
+|   |   
+|   +-- type: 2,1
+|   |   |   
+|   |   +-- float: 2,1
+|   |   |   
+|   |   *   
+|   |   
+|   +-- orange: 2,7
+|   |   
+|   +-- ;: 2,13
+|   |   
+|   *   
+|   
+*   
+statementList: 3,4
+|   
++-- statementList (EMPTY STRING): 3,4
+|   
++-- statement: 3,1
+|   |   
+|   +-- type: 3,1
+|   |   |   
+|   |   +-- char: 3,1
+|   |   |   
+|   |   *   
+|   |   
+|   +-- banana: 3,6
+|   |   
+|   +-- =: 3,13
+|   |   
+|   +-- expression: 3,15
+|   |   |   
+|   |   +-- '2': 3,15
+|   |   |   
+|   |   *   
+|   |   
+|   +-- ;: 3,18
+|   |   
+|   *   
+|   
+*   

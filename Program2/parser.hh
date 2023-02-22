@@ -45,7 +45,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 20 "parser.y"
+#line 17 "parser.y"
 
   #include "tree_node.h"
 
@@ -91,8 +91,7 @@ extern int yydebug;
     CLOSE_PARANTHESIS = 286,       /* CLOSE_PARANTHESIS  */
     OPEN_BRACE = 287,              /* OPEN_BRACE  */
     CLOSE_BRACE = 288,             /* CLOSE_BRACE  */
-    EMPTY_STRING = 289,            /* EMPTY_STRING  */
-    NO_MATCH = 290                 /* NO_MATCH  */
+    THEN = 289                     /* THEN  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

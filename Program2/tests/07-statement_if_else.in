@@ -1,0 +1,2 @@
+if(a) print(b); else print(c);
+if(a) if(c) d; else e;

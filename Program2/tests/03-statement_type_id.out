@@ -1,0 +1,85 @@
+statementList: 1,1
+|   
++-- statementList (EMPTY STRING): 1,1
+|   
++-- statement: 1,1
+|   |   
+|   +-- type: 1,1
+|   |   |   
+|   |   +-- int: 1,1
+|   |   |   
+|   |   *   
+|   |   
+|   +-- alpha: 1,5
+|   |   
+|   +-- =: 1,11
+|   |   
+|   +-- expression: 1,13
+|   |   |   
+|   |   +-- 2: 1,13
+|   |   |   
+|   |   *   
+|   |   
+|   +-- ;: 1,14
+|   |   
+|   *   
+|   
+*   
+statementList: 2,5
+|   
++-- statementList (EMPTY STRING): 2,5
+|   
++-- statement: 2,1
+|   |   
+|   +-- type: 2,1
+|   |   |   
+|   |   +-- float: 2,1
+|   |   |   
+|   |   *   
+|   |   
+|   +-- beta: 2,7
+|   |   
+|   +-- =: 2,12
+|   |   
+|   +-- expression: 2,14
+|   |   |   
+|   |   +-- expression: 2,14
+|   |   |   |   
+|   |   |   +-- 4: 2,14
+|   |   |   |   
+|   |   |   *   
+|   |   |   
+|   |   +-- -: 2,15
+|   |   |   
+|   |   +-- expression: 2,16
+|   |   |   |   
+|   |   |   +-- 1: 2,16
+|   |   |   |   
+|   |   |   *   
+|   |   |   
+|   |   *   
+|   |   
+|   +-- ;: 2,17
+|   |   
+|   *   
+|   
+*   
+statementList: 3,4
+|   
++-- statementList (EMPTY STRING): 3,4
+|   
++-- statement: 3,1
+|   |   
+|   +-- type: 3,1
+|   |   |   
+|   |   +-- char: 3,1
+|   |   |   
+|   |   *   
+|   |   
+|   +-- gamma: 3,6
+|   |   
+|   +-- ;: 3,11
+|   |   
+|   *   
+|   
+*   

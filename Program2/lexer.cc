@@ -351,8 +351,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 39
-#define YY_END_OF_BUFFER 40
+#define YY_NUM_RULES 38
+#define YY_END_OF_BUFFER 39
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -362,10 +362,10 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[85] =
     {   0,
-       37,   37,   40,   38,   33,   34,   38,   38,   38,   38,
-       29,   30,   17,   15,   27,   16,   38,   18,    9,   28,
+        0,    0,   39,   37,   33,   34,   37,   37,   37,   37,
+       29,   30,   17,   15,   27,   16,   37,   18,    9,   28,
        21,   14,   23,    8,    8,    8,    8,    8,    8,   31,
-       38,   32,   33,   20,    0,   13,    0,   25,    0,    0,
+       37,   32,   33,   20,    0,   13,    0,   25,    0,    0,
        10,    0,   35,   10,    9,    0,   22,   19,   24,    8,
         8,    8,    8,    8,    8,    1,    8,    8,   26,   12,
         0,    0,    0,   35,   10,    0,   11,    8,    8,    8,
@@ -1109,14 +1109,12 @@ YY_RULE_SETUP
 {
     yylval = new tree_node("newline", CurrColumn, CurrLine);
     CurrColumn = 1;
-    ++CurrLine;
-
     return '\n';
 }       
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 237 "lexer.l"
+#line 235 "lexer.l"
 {
     CurrColumn = 1;
     CurrLine++;
@@ -1125,7 +1123,7 @@ YY_RULE_SETUP
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 242 "lexer.l"
+#line 240 "lexer.l"
 {
     bool contains_newline = false;
     // Checking if block has newlines
@@ -1146,27 +1144,18 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 260 "lexer.l"
+#line 258 "lexer.l"
 {
-    return EMPTY_STRING;
+    CurrColumn += yyleng;
+    std::cerr << "Unrecognized character: " << yytext << "\n";
 }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 264 "lexer.l"
-{
-    CurrColumn += yyleng;
-    std::cerr << "Unrecognized character: " << yytext << "\n";
-
-    return NO_MATCH;
-}
-	YY_BREAK
-case 39:
-YY_RULE_SETUP
-#line 270 "lexer.l"
+#line 262 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 1170 "lexer.cc"
+#line 1159 "lexer.cc"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2134,4 +2123,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 270 "lexer.l"
+#line 262 "lexer.l"

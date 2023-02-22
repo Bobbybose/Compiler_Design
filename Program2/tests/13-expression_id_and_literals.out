@@ -1,0 +1,85 @@
+statementList: 1,1
+|   
++-- statementList (EMPTY STRING): 1,1
+|   
++-- statement: 1,1
+|   |   
+|   +-- expression: 1,1
+|   |   |   
+|   |   +-- alpha: 1,1
+|   |   |   
+|   |   *   
+|   |   
+|   +-- ;: 1,6
+|   |   
+|   *   
+|   
+*   
+statementList: 2,1
+|   
++-- statementList (EMPTY STRING): 2,1
+|   
++-- statement: 2,1
+|   |   
+|   +-- expression: 2,1
+|   |   |   
+|   |   +-- 1: 2,1
+|   |   |   
+|   |   *   
+|   |   
+|   +-- ;: 2,2
+|   |   
+|   *   
+|   
+*   
+statementList: 3,6
+|   
++-- statementList (EMPTY STRING): 3,6
+|   
++-- statement: 3,1
+|   |   
+|   +-- expression: 3,1
+|   |   |   
+|   |   +-- 2.2e-3: 3,1
+|   |   |   
+|   |   *   
+|   |   
+|   +-- ;: 3,7
+|   |   
+|   *   
+|   
+*   
+statementList: 4,3
+|   
++-- statementList (EMPTY STRING): 4,3
+|   
++-- statement: 4,1
+|   |   
+|   +-- expression: 4,1
+|   |   |   
+|   |   +-- 'a': 4,1
+|   |   |   
+|   |   *   
+|   |   
+|   +-- ;: 4,4
+|   |   
+|   *   
+|   
+*   
+statementList: 5,6
+|   
++-- statementList (EMPTY STRING): 5,6
+|   
++-- statement: 5,1
+|   |   
+|   +-- expression: 5,1
+|   |   |   
+|   |   +-- "beta": 5,1
+|   |   |   
+|   |   *   
+|   |   
+|   +-- ;: 5,7
+|   |   
+|   *   
+|   
+*   

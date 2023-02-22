@@ -228,8 +228,6 @@ digits [0-9]
 \n {
     yylval = new tree_node("newline", CurrColumn, CurrLine);
     CurrColumn = 1;
-    ++CurrLine;
-
     return '\n';
 }       
 
@@ -256,13 +254,7 @@ digits [0-9]
     }
 }
 
-"" {
-    return EMPTY_STRING;
-}
-
 . {
     CurrColumn += yyleng;
     std::cerr << "Unrecognized character: " << yytext << "\n";
-
-    return NO_MATCH;
 }
