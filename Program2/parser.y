@@ -129,31 +129,29 @@ expression: OPEN_PARANTHESIS expression CLOSE_PARANTHESIS {
 	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1);
 } | STRING_LIT {
 	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1);
-} | ID OPEN_PARANTHESIS function_arg CLOSE_PARANTHESIS{
-	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3, $4);
+} | function_call {
+	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1);
 }; 
 
-function_arg: {
-	$$ = nullptr;
-} | expression {
-	$$ = new tree_node("function_arg", $1->CurrColumn, CurrLine, $1);
-} | expression multiple_function_arg {
-	$$ = new tree_node("function_arg", $1->CurrColumn, CurrLine, $1, $2);
+function_call: ID OPEN_PARANTHESIS CLOSE_PARANTHESIS {
+	$$ = new tree_node("function_call", $1->CurrColumn, CurrLine, $1, $2, $3);
+} | ID OPEN_PARANTHESIS function_args CLOSE_PARANTHESIS {
+	$$ = new tree_node("function_call", $1->CurrColumn, CurrLine, $1, $2, $3, $4);
 };
 
-multiple_function_arg : COMMA multiple_function_arg  {
-	$$ = new tree_node("multiple_function_arg", $1->CurrColumn, CurrLine, $1, $2);
-} | expression {
-	$$ = new tree_node("multiple_function_arg", $1->CurrColumn, CurrLine, $1);
-} | expression COMMA multiple_function_arg{
-	$$ = new tree_node("multiple_function_arg", $1->CurrColumn, CurrLine, $1, $2, $3);
+function_args: expression {
+	$$ = new tree_node("function_args", $1->CurrColumn, CurrLine, $1);
+} | function_args COMMA expression {
+	$$ = new tree_node("function_args", $1->CurrColumn, CurrLine, $1, $2, $3);
 };
+
+
 
 %%
 
-int main()
-{
+int main() {
 	int result = yyparse();
 	yylex_destroy();
+
 	return result;
 }

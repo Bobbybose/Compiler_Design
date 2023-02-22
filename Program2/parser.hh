@@ -60,8 +60,38 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    VAR = 258,                     /* VAR  */
-    NUMBER = 259                   /* NUMBER  */
+    IF = 258,                      /* IF  */
+    ELSE = 259,                    /* ELSE  */
+    WHILE = 260,                   /* WHILE  */
+    FOR = 261,                     /* FOR  */
+    INT = 262,                     /* INT  */
+    FLOAT = 263,                   /* FLOAT  */
+    CHAR = 264,                    /* CHAR  */
+    ID = 265,                      /* ID  */
+    INT_LIT = 266,                 /* INT_LIT  */
+    FP_LIT = 267,                  /* FP_LIT  */
+    CHAR_LIT = 268,                /* CHAR_LIT  */
+    STRING_LIT = 269,              /* STRING_LIT  */
+    EQUAL = 270,                   /* EQUAL  */
+    PLUS = 271,                    /* PLUS  */
+    MINUS = 272,                   /* MINUS  */
+    STAR = 273,                    /* STAR  */
+    FORWARD_SLASH = 274,           /* FORWARD_SLASH  */
+    EQUAL_EQUAL = 275,             /* EQUAL_EQUAL  */
+    NOT_EQUAL = 276,               /* NOT_EQUAL  */
+    LESS_THAN = 277,               /* LESS_THAN  */
+    LESS_THAN_OR_EQUAL = 278,      /* LESS_THAN_OR_EQUAL  */
+    GREATER_THAN = 279,            /* GREATER_THAN  */
+    GREATER_THAN_OR_EQUAL = 280,   /* GREATER_THAN_OR_EQUAL  */
+    AND = 281,                     /* AND  */
+    OR = 282,                      /* OR  */
+    COMMA = 283,                   /* COMMA  */
+    SEMICOLON = 284,               /* SEMICOLON  */
+    OPEN_PARANTHESIS = 285,        /* OPEN_PARANTHESIS  */
+    CLOSE_PARANTHESIS = 286,       /* CLOSE_PARANTHESIS  */
+    OPEN_BRACE = 287,              /* OPEN_BRACE  */
+    CLOSE_BRACE = 288,             /* CLOSE_BRACE  */
+    EMPTY_STRING = 289             /* EMPTY_STRING  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
