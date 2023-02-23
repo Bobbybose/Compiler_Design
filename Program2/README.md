@@ -2,19 +2,21 @@
 ## Description
 **Author:** Bobby Bose
 
-**Final Version Date:** February 22, 2023
+**Final Version Date:** February 23, 2023
 
 **Course:** CS541 - Compiler Design
 
 **Assignment:** Program 2 - Parser
 
-- This is a lexical analyzer designed to read in input and separate it into tokens
+- This is a parser designed to create a parse tree of user input based on predefined production
 
-- Code for program is based off of Dr. Moore's example
+- A lexical analyzer is included to parse input and generate tokens
+
+- Code for program is based off of Dr. Moore's examples
 
 - Makefile is also written based off of Dr. Moore's example
 
-- A set of tests is included in /tests in order to test different possibilities for every token type
+- A set of tests is included in /tests in order to test different possibilities for every production
 
 ## Citations
 **[Flex Manual](https://westes.github.io/flex/manual/)**
@@ -33,7 +35,7 @@ No external packages required beyond Flex.
 ## How to Build
 To build, run 'make' or 'make all'
 
-'make clean' will remove executable and .cc file
+'make clean' will remove generated files
 
 ## How to Run
 To run without input file, do './clukcs_parser'
@@ -41,31 +43,34 @@ To run without input file, do './clukcs_parser'
 To run with input file, do './clukcs_parser < input-file'
 
 ## Program Design
-Program consists of three main parts: declarations section, rules section, and user code section.
+Program consists of three main parts: lexical analyzer, parser, and tree_node structure
 
-### Declarations section
-- Libraries for program are included here (iostream and string)
-- Enumerator for Token is declared with all token types possible
-- Necessary Flex options are set
-- Common patterns for rules are declared
-
-### Rules section
+### Lexical analyzer
 - Sets the regular expression rule/match for each token type
 - Returns the correct token_type based on the regex match
 
-### User code section
-- Program uses namespace std
-- Two functions are present in this section:
-    - **string token_name(int tok)**
-        - Function is just a big switch statement
-        - Takes in the current token being looked at and returns it's string value representation
-    - **int main()**
-        - Main function of the program
-        - Handles overall execution flow
-        - Reads in next token from standard input and then prints it out to standard output with the associated line and column number
-            - If token is an identifier, integer literal, floating point literal, character literal, or string literal, then the lexeme is also printed out
-        - Memory is freed up at end of execution to prevent memory leaks
+### Parser
+- Productions are written for a subset of the CLUKCS language
+- Ambiguity is solved by declaring precedence levels at the top of the file with Bison's %left, %right, and %precedence options 
+- Parser gracefully handles syntax errors
+    - Recovers by synchronizing at the next semicolon
+    - An error message is printed to inform the user
+    - A tree node is be created to represent the error
+- Unrecognized characters are ignored
+    - Can potentially cause error that is handled gracefully
+- **int main()** : Handles parsing of input
+- **void yyerror(const char *msg)** : Prints out error message mentioned above
+
+### tree_node
+- Class that creates and maintains a tree structure in order to print a parse tree
+- Code mostly same from example provided by Dr. Moore
+    - Has been edited to include line and column numbers as part of the output/label for nodes
+- 
         
+### Additional Files
+- **global.h**
+    - Helps link lexer to parser
+    - Where column and line number variables are declared
 
 ## Bugs/limitations
-No bugs currently present in code
+- Column number for errors in parse tree match synchronizing semicolon's column number and not beginning of error token

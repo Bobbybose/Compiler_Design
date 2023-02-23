@@ -21,7 +21,7 @@ struct tree_node
 	// the destructor will free them with delete.  Also, no node
 	// should appear twice in the same tree.
 	//
-	// Call as: tree_node *node = new tree_node("label", child1, child2);
+	// Call as: tree_node *node = new tree_node("label", CurrColumn, CurrLine, child1, child2);
 	template<typename... Args>
 	tree_node(const std::string &label, int CurrColumn, int CurrLine, Args... children)
 		: label(label), CurrColumn(CurrColumn), CurrLine(CurrLine), children{children...}
