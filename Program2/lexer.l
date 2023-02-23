@@ -244,7 +244,7 @@ digits [0-9]
             contains_newline = true;
         }
     }
-
+    // If there's a newline, increment row number and reset column number
     if(contains_newline){
         CurrColumn = 1;
         CurrLine++;

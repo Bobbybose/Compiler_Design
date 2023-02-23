@@ -58,14 +58,15 @@ Program consists of three main parts: lexical analyzer, parser, and tree_node st
     - A tree node is be created to represent the error
 - Unrecognized characters are ignored
     - Can potentially cause error that is handled gracefully
-- **int main()** : Handles parsing of input
-- **void yyerror(const char *msg)** : Prints out error message mentioned above
+- **int main()** 
+    - Handles parsing of input
+- **void yyerror(const char msg)**
+    - Prints out error message mentioned above
 
 ### tree_node
 - Class that creates and maintains a tree structure in order to print a parse tree
 - Code mostly same from example provided by Dr. Moore
     - Has been edited to include line and column numbers as part of the output/label for nodes
-- 
         
 ### Additional Files
 - **global.h**

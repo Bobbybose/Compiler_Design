@@ -32,6 +32,7 @@ void yyerror(const char *msg)
 /* Which nonterminal is at the top of the parse tree? */
 %start program
 
+/* Precedence order */
 %left COMMA
 %right EQUAL
 %left OR
@@ -41,18 +42,21 @@ void yyerror(const char *msg)
 %left PLUS MINUS
 %left STAR FORWARD_SLASH
 
+/* Solving dangling else ambiguity */
 %precedence THEN
 %precedence ELSE
 
 %%
 
+// program productions
+// -Prints parse trees
 program: statementList '\n' {
 	print_tree($1);
 	delete $1;
 	delete $2;
 	$$ = nullptr;
 	CurrLine++;
-} | program statementList '\n' {
+} | program statementList '\n' {	// For repeated inputs without rerunning program
 	print_tree($2);
 	delete $2;
 	delete $3;
@@ -60,15 +64,19 @@ program: statementList '\n' {
 	CurrLine++;
 }
 
+// statementList productions
+// -Where production tree starts
 statementList: statementList statement {
 	$$ = new tree_node("statementList", $1->CurrColumn, CurrLine, $1, $2);
 } | {
+	// Fixing column number issues
 	if(CurrLine==1)
 		$$ = new tree_node("statementList (EMPTY STRING)", CurrColumn, CurrLine);
 	else
 		$$ = new tree_node("statementList (EMPTY STRING)", CurrColumn-1, CurrLine);
 };
 
+// statement productions
 statement: OPEN_BRACE statementList CLOSE_BRACE {
 	$$ = new tree_node("statement", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | type ID EQUAL expression SEMICOLON {
@@ -90,6 +98,7 @@ statement: OPEN_BRACE statementList CLOSE_BRACE {
 	yyerrok; 
 };
 
+// type productions
 type: INT {
 	$$ = new tree_node("type", $1->CurrColumn, CurrLine, $1);
 } | FLOAT {
@@ -98,6 +107,7 @@ type: INT {
 	$$ = new tree_node("type", $1->CurrColumn, CurrLine, $1);
 };
 
+// expression productions
 expression: OPEN_PARANTHESIS expression CLOSE_PARANTHESIS {
 	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | expression PLUS expression {
@@ -140,12 +150,17 @@ expression: OPEN_PARANTHESIS expression CLOSE_PARANTHESIS {
 	$$ = new tree_node("expression", $1->CurrColumn, CurrLine, $1);
 }; 
 
+// function_call productions
+// -split into two parts
+// -this part handles general function call syntax
 function_call: ID OPEN_PARANTHESIS CLOSE_PARANTHESIS {
 	$$ = new tree_node("function_call", $1->CurrColumn, CurrLine, $1, $2, $3);
 } | ID OPEN_PARANTHESIS function_args CLOSE_PARANTHESIS {
 	$$ = new tree_node("function_call", $1->CurrColumn, CurrLine, $1, $2, $3, $4);
 };
 
+// function_args productions
+// -Hanldes the unknown number of arguments
 function_args: expression {
 	$$ = new tree_node("function_args", $1->CurrColumn, CurrLine, $1);
 } | function_args COMMA expression {
@@ -155,7 +170,9 @@ function_args: expression {
 
 
 %%
-
+// main function of the program
+// -Parses input
+// -Frees resources used by the scanner
 int main() {
 	int result = yyparse();
 	yylex_destroy();

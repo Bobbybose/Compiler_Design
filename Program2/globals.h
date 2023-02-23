@@ -6,7 +6,7 @@
 // And make it visible to the parser.
 YY_DECL;
 
-// Declarations for line and column, defined in lexical_analyzer.l
+// Declarations for line and column, defined in lexer.l
 extern int CurrLine;
 extern int CurrColumn;
 
