@@ -105,7 +105,6 @@ public:
 	std::string name() const override {
 		// Enclose in single-quotes, to distinguish a Variable address.
 		std::string result = "'";
-		std::cout << "Value: " << value << std::endl;
 
 		// Use backslash escapes for newline, apostrophe, and backslash.
 		if (value == '\n')

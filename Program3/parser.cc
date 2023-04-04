@@ -526,11 +526,11 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
-       0,    43,    43,    47,    49,    53,    54,    54,    56,    57,
-      58,    62,    64,    66,    70,    71,    72,    73,    74,    75,
-      76,    77,    78,    83,    88,   114
+       0,    43,    43,    47,    49,    53,    56,    56,    59,    70,
+      74,    78,    80,    82,    86,   169,   170,   171,   172,   174,
+     235,   240,   245,   251,   257,   280
 };
 #endif
 
@@ -1150,150 +1150,319 @@ yyreduce:
   case 5: /* statement: expression ';'  */
 #line 53 "parser.y"
                           {
+	yyval.code = yyvsp[-1].code;
+
 }
-#line 1155 "parser.cc"
+#line 1157 "parser.cc"
     break;
 
   case 6: /* $@1: %empty  */
-#line 54 "parser.y"
+#line 56 "parser.y"
         { symtab.push(); }
-#line 1161 "parser.cc"
+#line 1163 "parser.cc"
     break;
 
   case 7: /* statement: '{' $@1 statement_list '}'  */
-#line 54 "parser.y"
+#line 56 "parser.y"
                                                {
 	symtab.pop();
+
 }
-#line 1169 "parser.cc"
+#line 1172 "parser.cc"
     break;
 
   case 8: /* statement: type IDENTIFIER '=' expression ';'  */
-#line 56 "parser.y"
+#line 59 "parser.y"
                                        {
+	Address* temp = symtab.make_temp(yyvsp[-4].type);
+
+	yyval.code = yyvsp[-1].code;
+	// t0 = num
+	yyval.code += temp->name() + " = " + yyvsp[-1].addr->name() + "\n";
+	// id = t0
+	yyval.code += yyvsp[-3].code + " = " + temp->name() + "\n";
+
+	symtab.put(yyvsp[-3].code, yyvsp[-4].type);
+
 }
-#line 1176 "parser.cc"
+#line 1189 "parser.cc"
     break;
 
   case 9: /* statement: type IDENTIFIER ';'  */
-#line 57 "parser.y"
+#line 70 "parser.y"
                         {
-}
-#line 1183 "parser.cc"
-    break;
+	yyval.code = "";
+	symtab.put(yyvsp[-1].code, yyvsp[-2].type);
 
-  case 10: /* statement: error ';'  */
-#line 58 "parser.y"
-              { // error is a special token defined by bison
-	yyerrok;
-}
-#line 1191 "parser.cc"
-    break;
-
-  case 11: /* type: INT  */
-#line 62 "parser.y"
-          {
-	yyval.type = Type::Int;
 }
 #line 1199 "parser.cc"
     break;
 
-  case 12: /* type: FLOAT  */
-#line 64 "parser.y"
-          {
-	yyval.type = Type::Float;
+  case 10: /* statement: error ';'  */
+#line 74 "parser.y"
+              { // error is a special token defined by bison
+	yyerrok;
 }
 #line 1207 "parser.cc"
     break;
 
-  case 13: /* type: CHAR  */
-#line 66 "parser.y"
-         {
-	yyval.type = Type::Char;
+  case 11: /* type: INT  */
+#line 78 "parser.y"
+          {
+	yyval.type = Type::Int;
 }
 #line 1215 "parser.cc"
     break;
 
-  case 14: /* expression: expression '+' expression  */
-#line 70 "parser.y"
-                                      {
+  case 12: /* type: FLOAT  */
+#line 80 "parser.y"
+          {
+	yyval.type = Type::Float;
 }
-#line 1222 "parser.cc"
+#line 1223 "parser.cc"
+    break;
+
+  case 13: /* type: CHAR  */
+#line 82 "parser.y"
+         {
+	yyval.type = Type::Char;
+}
+#line 1231 "parser.cc"
+    break;
+
+  case 14: /* expression: expression '+' expression  */
+#line 86 "parser.y"
+                                      {
+	yyval.code = yyvsp[-2].code + yyvsp[0].code;
+
+	// Getting types of LHS and RHS
+	Type E1_type = symtab.get(yyvsp[-2].addr->name())->type;
+	Type E2_type = symtab.get(yyvsp[0].addr->name())->type;
+	
+	if(E1_type == E2_type){
+		yyval.type = E1_type;
+		yyval.addr = symtab.make_temp(E1_type);
+	}
+	else{
+		if(E1_type == Type::Float){
+			if(E2_type == Type::Int){
+				Address* temp = symtab.make_temp(E1_type);
+				yyval.code += temp->name() + " = int2float " + yyvsp[0].addr->name() + "\n";
+				
+				yyval.type = E1_type;
+				yyval.addr = symtab.make_temp(E1_type);
+
+				yyval.code += yyval.addr->name() + " = " + yyvsp[-2].addr->name() + " + " + temp->name() + "\n";
+			}
+			if(E2_type == Type::Char){
+				Address* temp = symtab.make_temp(Type::Int);
+				yyval.code += temp->name() + " = char2int " + yyvsp[0].addr->name() + "\n";
+					
+				Address* temp2 = symtab.make_temp(E1_type);
+				yyval.code += temp2->name() + " = int2float " + temp->name() + "\n";
+
+				yyval.type = E1_type;
+				yyval.addr = symtab.make_temp(E1_type);
+
+				yyval.code += yyval.addr->name() + " = " + yyvsp[-2].addr->name() + " + " + temp2->name() + "\n";
+			}
+		}
+
+		else if(E2_type == Type::Float){
+			if(E1_type == Type::Int){
+				Address* temp = symtab.make_temp(E2_type);
+				yyval.code += temp->name() + " = int2float " + yyvsp[-2].addr->name() + "\n";
+
+				yyval.type = E2_type;
+				yyval.addr = symtab.make_temp(E2_type);
+
+				yyval.code += yyval.addr->name() + " = " + temp->name() + " + " + yyvsp[0].addr->name() + "\n";
+			}
+			if(E1_type == Type::Char){
+				Address* temp = symtab.make_temp(Type::Int);
+				yyval.code += temp->name() + " = char2int " + yyvsp[-2].addr->name() + "\n";
+					
+				Address* temp2 = symtab.make_temp(E2_type);
+				yyval.code += temp2->name() + " = int2float " + temp->name() + "\n";
+
+				yyval.type = E2_type;
+				yyval.addr = symtab.make_temp(E2_type);
+
+				yyval.code += yyval.addr->name() + " = " + temp->name() + " + " + yyvsp[0].addr->name() + "\n";
+			}
+		}
+
+		else if(E1_type == Type::Int){
+			Address* temp = symtab.make_temp(E1_type);
+			yyval.code += temp->name() + " = char2int " + yyvsp[0].addr->name() + "\n";
+			
+			yyval.type = E1_type;
+			yyval.addr = symtab.make_temp(E1_type);
+
+			yyval.code += yyval.addr->name() + " = " + yyvsp[-2].addr->name() + " + " + temp->name() + "\n";
+		}
+		
+		else if(E2_type == Type::Int){
+			Address* temp = symtab.make_temp(E2_type);
+			yyval.code += temp->name() + " = char2int " + yyvsp[-2].addr->name() + "\n";
+			
+			yyval.type = E2_type;
+			yyval.addr = symtab.make_temp(E2_type);
+
+			yyval.code += yyval.addr->name() + " = " + temp->name() + " + " + yyvsp[0].addr->name() + "\n";
+		}
+			
+	}
+
+
+}
+#line 1320 "parser.cc"
     break;
 
   case 15: /* expression: expression '-' expression  */
-#line 71 "parser.y"
+#line 169 "parser.y"
                               {
 }
-#line 1229 "parser.cc"
+#line 1327 "parser.cc"
     break;
 
   case 16: /* expression: expression '*' expression  */
-#line 72 "parser.y"
+#line 170 "parser.y"
                               {
 }
-#line 1236 "parser.cc"
+#line 1334 "parser.cc"
     break;
 
   case 17: /* expression: expression '/' expression  */
-#line 73 "parser.y"
+#line 171 "parser.y"
                               {
 }
-#line 1243 "parser.cc"
+#line 1341 "parser.cc"
     break;
 
   case 18: /* expression: expression '%' expression  */
-#line 74 "parser.y"
+#line 172 "parser.y"
                               {
+
 }
-#line 1250 "parser.cc"
+#line 1349 "parser.cc"
     break;
 
   case 19: /* expression: expression '=' expression  */
-#line 75 "parser.y"
+#line 174 "parser.y"
                               {
+	// Getting types of LHS and RHS
+	Type E1_type = symtab.get(yyvsp[-2].addr->name())->type;
+	Type E2_type = symtab.get(yyvsp[0].addr->name())->type;
+	
+	// Type is same as LHS
+	yyval.type = E1_type;
+	yyval.addr = yyvsp[-2].addr;
+	yyval.code = yyvsp[-2].code + yyvsp[0].code;
+	
+	// If RHS is a different type, do type conversion
+	if(E1_type != E2_type){
+		std::cout << "Here " << std::endl;
+		switch(E1_type){
+			case Type::Int:
+				if(E2_type == Type::Float){
+					Address* temp = symtab.make_temp(E1_type);
+					yyval.code += temp->name() + " = float2int " + yyvsp[0].addr->name() + "\n";
+					yyval.code += yyvsp[-2].addr->name() + " = " + temp->name() + "\n";
+				}
+				else if(E2_type == Type::Char){
+					Address* temp = symtab.make_temp(E1_type);
+					yyval.code += temp->name() + " = char2int " + yyvsp[0].addr->name() + "\n";
+					yyval.code += yyvsp[-2].addr->name() + " = " + temp->name() + "\n";
+				}
+				break;		
+			case Type::Float:
+				if(E2_type == Type::Int){
+					Address* temp = symtab.make_temp(E1_type);
+					yyval.code += temp->name() + " = int2float " + yyvsp[0].addr->name() + "\n";
+					yyval.code += yyvsp[-2].addr->name() + " = " + temp->name() + "\n";
+				}
+				else if(E2_type == Type::Char){
+					Address* temp = symtab.make_temp(Type::Int);
+					yyval.code += temp->name() + " = char2int " + yyvsp[0].addr->name() + "\n";
+					
+					Address* temp2 = symtab.make_temp(E1_type);
+					yyval.code += temp2->name() + " = int2float " + temp->name() + "\n";
+					yyval.code += yyvsp[-2].addr->name() + " = " + temp2->name() + "\n";
+				}
+				break;
+			case Type::Char:
+				if(E2_type == Type::Int){
+					Address* temp = symtab.make_temp(E1_type);
+					yyval.code += temp->name() + " = int2char " + yyvsp[0].addr->name() + "\n";
+					yyval.code += yyvsp[-2].addr->name() + " = " + temp->name() + "\n";
+				}
+				else if(E2_type == Type::Float){
+					Address* temp = symtab.make_temp(Type::Int);
+					yyval.code += temp->name() + " = float2int " + yyvsp[0].addr->name() + "\n";
+					
+					Address* temp2 = symtab.make_temp(E1_type);
+					yyval.code += temp2->name() + " = int2char " + temp->name() + "\n";
+					yyval.code += yyvsp[-2].addr->name() + " = " + temp2->name() + "\n";
+				}
+				break;
+			default:
+				break;
+		}
+	}
+
 }
-#line 1257 "parser.cc"
+#line 1416 "parser.cc"
     break;
 
   case 20: /* expression: '-' expression  */
-#line 76 "parser.y"
+#line 235 "parser.y"
                                 {
+	yyval.addr = symtab.make_temp(yyvsp[0].type);
+	yyval.code = yyval.addr->name() + " = -" + yyvsp[0].addr->name() + "\n";
+	yyval.type = yyvsp[0].type;
+
 }
-#line 1264 "parser.cc"
+#line 1427 "parser.cc"
     break;
 
   case 21: /* expression: '(' expression ')'  */
-#line 77 "parser.y"
+#line 240 "parser.y"
                        {
+	yyval.code = yyvsp[-1].code;
+	yyval.addr = yyvsp[-1].addr;
+	yyval.type = yyvsp[-1].type;
+
 }
-#line 1271 "parser.cc"
+#line 1438 "parser.cc"
     break;
 
   case 22: /* expression: INT_LITERAL  */
-#line 78 "parser.y"
+#line 245 "parser.y"
                 {
 	yyval.code = "";
 	int val = std::stoi(yyvsp[0].code);
 	yyval.addr = symtab.make_int_const(val);
 	yyval.type = Type::Int;
+
 }
-#line 1282 "parser.cc"
+#line 1450 "parser.cc"
     break;
 
   case 23: /* expression: FLOAT_LITERAL  */
-#line 83 "parser.y"
+#line 251 "parser.y"
                   {
 	yyval.code = "";
 	float val = std::stof(yyvsp[0].code);
 	yyval.addr = symtab.make_float_const(val);
 	yyval.type = Type::Float;
+
 }
-#line 1293 "parser.cc"
+#line 1462 "parser.cc"
     break;
 
   case 24: /* expression: CHAR_LITERAL  */
-#line 88 "parser.y"
+#line 257 "parser.y"
                  {
 	yyval.code = "";
 	
@@ -1301,43 +1470,38 @@ yyreduce:
 	std::string val = yyvsp[0].code.substr(1, yyvsp[0].code.size()-2);
 	
 	char char_val;
-
-	//std::cout << "val: " << val << std::endl;
-
 	if(val == "\\n"){
-		std::cout << "slash-n" << std::endl;
 		char_val = '\n';
 	}
-	else if(val == "\\\\")
+	else if(val == "\\\\"){
 		char_val = '\\';
-	else if(val == "\\'")
+	}
+	else if(val == "\\'"){
 		char_val = '\'';
+	}
 	else
 		char_val = val[0];
-
-	std::cout << "char_val: " << char_val << std::endl;
+	//std::cout << "char_val: " << char_val << std::endl;
 
 	yyval.addr = symtab.make_char_const(char_val);
-
 	yyval.type = Type::Char;
+
 }
-#line 1325 "parser.cc"
+#line 1491 "parser.cc"
     break;
 
   case 25: /* expression: IDENTIFIER  */
-#line 114 "parser.y"
+#line 280 "parser.y"
                {
 	yyval.code = "";
-	std::cout << "ID: " << str(yyvsp[0].type) << std::endl;
 	yyval.addr = symtab.make_variable(yyvsp[0].code);
-	yyval.type = yyval.addr->type();
-	//std::cout << "Type: " << $$.addr->type() << std::endl;
+	yyval.type = yyvsp[0].type;
 }
-#line 1337 "parser.cc"
+#line 1501 "parser.cc"
     break;
 
 
-#line 1341 "parser.cc"
+#line 1505 "parser.cc"
 
       default: break;
     }
@@ -1530,7 +1694,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 123 "parser.y"
+#line 287 "parser.y"
 
 
 int main()
