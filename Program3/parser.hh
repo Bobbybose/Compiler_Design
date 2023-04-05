@@ -68,7 +68,8 @@ extern int yydebug;
     INT = 262,                     /* INT  */
     FLOAT = 263,                   /* FLOAT  */
     CHAR = 264,                    /* CHAR  */
-    UMINUS = 265                   /* UMINUS  */
+    AUTO = 265,                    /* AUTO  */
+    UMINUS = 266                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif

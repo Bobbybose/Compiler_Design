@@ -125,7 +125,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 %define api.value.type {clukcs::parser_val}
 
 %token IDENTIFIER INT_LITERAL FLOAT_LITERAL CHAR_LITERAL
-%token '+' '-' '*' '/' '%' '=' '(' ')' '{' '}' ';' INT FLOAT CHAR
+%token '+' '-' '*' '/' '%' '=' '(' ')' '{' '}' ';' INT FLOAT CHAR AUTO
 
 
 /* Which nonterminal is at the top of the parse tree? */
@@ -160,8 +160,7 @@ statement: expression ';' {
 
 	// If type conversion is needed, store temp name for code output
 	std::string RHS_label = "";
-
-	Type LHS_type = $1.type;
+	Type LHS_type;
 	Type RHS_type;
 	
 	// If RHS is a literal
@@ -170,6 +169,14 @@ statement: expression ';' {
 	}
 	else{
 		RHS_type = symtab.get($4.addr->name())->type;	
+	}
+
+	// Variable being declared with auto as type
+	if($1.type == Type::Auto){
+		LHS_type = RHS_type;
+	}
+	else{
+		LHS_type = $1.type;
 	}
 
 	// Type checking
@@ -232,11 +239,16 @@ statement: expression ';' {
 	else{
 		$$.code += $2.code + " = " + RHS_label + "\n";
 	}
-	symtab.put($2.code, $1.type);
+	
+	symtab.put($2.code, LHS_type);
 
 } | type IDENTIFIER ';' {
 	$$.code = "";
 	symtab.put($2.code, $1.type);
+
+	if($1.type == Type::Auto){
+		std::cerr << "" << std::endl;
+	}
 
 } | error ';' { // error is a special token defined by bison
 	yyerrok;
@@ -248,6 +260,8 @@ type: INT {
 	$$.type = Type::Float;
 } | CHAR {
 	$$.type = Type::Char;
+} | AUTO {
+	$$.type = Type::Auto;
 };
 
 expression: expression '+' expression {
@@ -297,6 +311,12 @@ expression: expression '+' expression {
 	}
 
 } | expression '=' expression {
+
+	// If LHS is not a variable
+	if((symtab.get($1.addr->name()) != nullptr)){
+		std::cerr << "" << std::endl;
+	}
+	
 	// Getting types of LHS and RHS
 	Type E1_type;
 	Type E2_type;

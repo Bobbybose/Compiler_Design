@@ -23,7 +23,8 @@ enum class Type {
 	Void,     // The type of statements.
 	Int,
 	Float,
-	Char
+	Char,
+	Auto
 };
 
 

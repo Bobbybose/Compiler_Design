@@ -89,6 +89,10 @@ exp ([eE][+-]?{int})
 	return CHAR;
 }
 
+"auto" {
+	return AUTO;
+}
+
 	/* Identifiers */
 {alpha}{alnum}* {
 	yylval.code = yytext;
