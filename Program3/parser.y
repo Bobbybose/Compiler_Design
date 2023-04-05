@@ -14,6 +14,105 @@ void yyerror(const char *msg)
 // The unique global symbol table.
 symbol_table symtab;
 
+// Does type checking for expression operations and sets code, addr, and type
+void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std::string op){
+	E0.code = E1.code + E2.code;
+	
+	// Types of LHS and RHS
+	Type E1_type;
+	Type E2_type;
+
+	// If LHS is a literal
+	if(symtab.get(E1.addr->name()) == nullptr){
+		E1_type = E1.type;
+	}
+	else{
+		E1_type = symtab.get(E1.addr->name())->type;	
+	}
+	
+	// If RHS is a literal
+	if(symtab.get(E2.addr->name()) == nullptr){
+		E2_type = E2.type;
+	}
+	else{
+		E2_type = symtab.get(E2.addr->name())->type;	
+	}
+
+
+	if(E1_type == E2_type){
+		E0.type = E1_type;
+		E0.addr = symtab.make_temp(E1_type);
+		E0.code += E0.addr->name() + " = " + E1.addr->name() + " " + op + " " + E2.addr->name() + "\n";
+	}
+	else{
+		if(E1_type == Type::Float){
+			if(E2_type == Type::Int){
+				Address* temp = symtab.make_temp(E1_type);
+				E0.code += temp->name() + " = int2float " + E2.addr->name() + "\n";
+				
+				E0.type = E1_type;
+				E0.addr = symtab.make_temp(E1_type);
+
+				E0.code += E0.addr->name() + " = " + E1.addr->name() + " " + op + " " + temp->name() + "\n";
+			}
+			if(E2_type == Type::Char){
+				Address* temp = symtab.make_temp(Type::Int);
+				E0.code += temp->name() + " = char2int " + E2.addr->name() + "\n";
+					
+				Address* temp2 = symtab.make_temp(E1_type);
+				E0.code += temp2->name() + " = int2float " + temp->name() + "\n";
+
+				E0.type = E1_type;
+				E0.addr = symtab.make_temp(E1_type);
+
+				E0.code += E0.addr->name() + " = " + E1.addr->name() + " " + op + " " + temp2->name() + "\n";
+			}
+		}
+		else if(E2_type == Type::Float){
+			if(E1_type == Type::Int){
+				Address* temp = symtab.make_temp(E2_type);
+				E0.code += temp->name() + " = int2float " + E1.addr->name() + "\n";
+
+				E0.type = E2_type;
+				E0.addr = symtab.make_temp(E2_type);
+
+				E0.code += E0.addr->name() + " = " + temp->name() + " " + op + " " + E2.addr->name() + "\n";
+			}
+			if(E1_type == Type::Char){
+				Address* temp = symtab.make_temp(Type::Int);
+				E0.code += temp->name() + " = char2int " + E1.addr->name() + "\n";
+					
+				Address* temp2 = symtab.make_temp(E2_type);
+				E0.code += temp2->name() + " = int2float " + temp->name() + "\n";
+
+				E0.type = E2_type;
+				E0.addr = symtab.make_temp(E2_type);
+
+				E0.code += E0.addr->name() + " = " + temp->name() + " " + op + " " + E2.addr->name() + "\n";
+			}
+		}
+		else if(E1_type == Type::Int){
+			Address* temp = symtab.make_temp(E1_type);
+			E0.code += temp->name() + " = char2int " + E2.addr->name() + "\n";
+			
+			E0.type = E1_type;
+			E0.addr = symtab.make_temp(E1_type);
+
+			E0.code += E0.addr->name() + " = " + E1.addr->name() + " " + op + " " + temp->name() + "\n";
+		}		
+		else if(E2_type == Type::Int){
+			Address* temp = symtab.make_temp(E2_type);
+			E0.code += temp->name() + " = char2int " + E1.addr->name() + "\n";
+			
+			E0.type = E2_type;
+			E0.addr = symtab.make_temp(E2_type);
+
+			E0.code += E0.addr->name() + " = " + temp->name() + " " + op + " " + E2.addr->name() + "\n";
+		}	
+	}
+}
+
+
 %}
 
 /* Put this into the generated header file, too */
@@ -57,14 +156,82 @@ statement: expression ';' {
 	symtab.pop();
 
 } | type IDENTIFIER '=' expression ';' {
-	Address* temp = symtab.make_temp($1.type);
-
 	$$.code = $4.code;
-	// t0 = num
-	$$.code += temp->name() + " = " + $4.addr->name() + "\n";
-	// id = t0
-	$$.code += $2.code + " = " + temp->name() + "\n";
 
+	// If type conversion is needed, store temp name for code output
+	std::string RHS_label = "";
+
+	Type LHS_type = $1.type;
+	Type RHS_type;
+	
+	// If RHS is a literal
+	if(symtab.get($4.addr->name()) == nullptr){
+		RHS_type = $4.type;
+	}
+	else{
+		RHS_type = symtab.get($4.addr->name())->type;	
+	}
+
+	// Type checking
+	if(LHS_type != RHS_type){
+		switch(LHS_type){
+			case Type::Int:
+				if(RHS_type == Type::Float){
+					Address* temp = symtab.make_temp(LHS_type);
+					$$.code += temp->name() + " = float2int " + $4.addr->name() + "\n";
+					RHS_label = temp->name();
+				}
+				else if(RHS_type == Type::Char){
+					Address* temp = symtab.make_temp(LHS_type);
+					$$.code += temp->name() + " = char2int " + $4.addr->name() + "\n";
+					RHS_label = temp->name();
+				}
+				break;		
+			case Type::Float:
+				if(RHS_type == Type::Int){
+					Address* temp = symtab.make_temp(LHS_type);
+					$$.code += temp->name() + " = int2float " + $4.addr->name() + "\n";
+					RHS_label = temp->name();
+				}
+				else if(RHS_type == Type::Char){
+					Address* temp = symtab.make_temp(Type::Int);
+					$$.code += temp->name() + " = char2int " + $4.addr->name() + "\n";
+					
+					Address* temp2 = symtab.make_temp(LHS_type);
+					$$.code += temp2->name() + " = int2float " + temp->name() + "\n";
+					RHS_label = temp->name();
+				}
+				break;
+			case Type::Char:
+				if(RHS_type == Type::Int){
+					Address* temp = symtab.make_temp(LHS_type);
+					$$.code += temp->name() + " = int2char " + $4.addr->name() + "\n";
+					RHS_label = temp->name();
+				}
+				else if(RHS_type == Type::Float){
+					Address* temp = symtab.make_temp(Type::Int);
+					$$.code += temp->name() + " = float2int " + $4.addr->name() + "\n";
+					
+					Address* temp2 = symtab.make_temp(LHS_type);
+					$$.code += temp2->name() + " = int2char " + temp->name() + "\n";
+					RHS_label = temp->name();
+				}
+				break;
+			default:
+				break;
+		}
+	}
+	
+	if(RHS_label == ""){
+		Address* temp3 = symtab.make_temp($1.type);
+		// t0 = num
+		$$.code += temp3->name() + " = " + $4.addr->name() + "\n";
+		// id = t0
+		$$.code += $2.code + " = " + temp3->name() + "\n";
+	}
+	else{
+		$$.code += $2.code + " = " + RHS_label + "\n";
+	}
 	symtab.put($2.code, $1.type);
 
 } | type IDENTIFIER ';' {
@@ -84,75 +251,40 @@ type: INT {
 };
 
 expression: expression '+' expression {
+	operation_type_checking($$, $1, $3, "+");
+} | expression '-' expression {
+	operation_type_checking($$, $1, $3, "-");
+} | expression '*' expression {
+	operation_type_checking($$, $1, $3, "*");
+} | expression '/' expression {
+	operation_type_checking($$, $1, $3, "/");
+} | expression '%' expression {
 	$$.code = $1.code + $3.code;
 
 	// Getting types of LHS and RHS
 	Type E1_type = symtab.get($1.addr->name())->type;
 	Type E2_type = symtab.get($3.addr->name())->type;
-	
+
+	if(E1_type == Type::Float || E2_type == Type::Float){
+		std::cerr << "" << std::endl;
+	}
+
 	if(E1_type == E2_type){
 		$$.type = E1_type;
 		$$.addr = symtab.make_temp(E1_type);
+		$$.code += $$.addr->name() + " = " + $1.addr->name() + " " + '%' + " " + $3.addr->name() + "\n";
+
 	}
 	else{
-		if(E1_type == Type::Float){
-			if(E2_type == Type::Int){
-				Address* temp = symtab.make_temp(E1_type);
-				$$.code += temp->name() + " = int2float " + $3.addr->name() + "\n";
-				
-				$$.type = E1_type;
-				$$.addr = symtab.make_temp(E1_type);
-
-				$$.code += $$.addr->name() + " = " + $1.addr->name() + " + " + temp->name() + "\n";
-			}
-			if(E2_type == Type::Char){
-				Address* temp = symtab.make_temp(Type::Int);
-				$$.code += temp->name() + " = char2int " + $3.addr->name() + "\n";
-					
-				Address* temp2 = symtab.make_temp(E1_type);
-				$$.code += temp2->name() + " = int2float " + temp->name() + "\n";
-
-				$$.type = E1_type;
-				$$.addr = symtab.make_temp(E1_type);
-
-				$$.code += $$.addr->name() + " = " + $1.addr->name() + " + " + temp2->name() + "\n";
-			}
-		}
-
-		else if(E2_type == Type::Float){
-			if(E1_type == Type::Int){
-				Address* temp = symtab.make_temp(E2_type);
-				$$.code += temp->name() + " = int2float " + $1.addr->name() + "\n";
-
-				$$.type = E2_type;
-				$$.addr = symtab.make_temp(E2_type);
-
-				$$.code += $$.addr->name() + " = " + temp->name() + " + " + $3.addr->name() + "\n";
-			}
-			if(E1_type == Type::Char){
-				Address* temp = symtab.make_temp(Type::Int);
-				$$.code += temp->name() + " = char2int " + $1.addr->name() + "\n";
-					
-				Address* temp2 = symtab.make_temp(E2_type);
-				$$.code += temp2->name() + " = int2float " + temp->name() + "\n";
-
-				$$.type = E2_type;
-				$$.addr = symtab.make_temp(E2_type);
-
-				$$.code += $$.addr->name() + " = " + temp->name() + " + " + $3.addr->name() + "\n";
-			}
-		}
-
-		else if(E1_type == Type::Int){
+		if(E1_type == Type::Int){
 			Address* temp = symtab.make_temp(E1_type);
 			$$.code += temp->name() + " = char2int " + $3.addr->name() + "\n";
 			
 			$$.type = E1_type;
 			$$.addr = symtab.make_temp(E1_type);
 
-			$$.code += $$.addr->name() + " = " + $1.addr->name() + " + " + temp->name() + "\n";
-		}
-		
+			$$.code += $$.addr->name() + " = " + $1.addr->name() + " " + '%' + " " + temp->name() + "\n";
+		}		
 		else if(E2_type == Type::Int){
 			Address* temp = symtab.make_temp(E2_type);
 			$$.code += temp->name() + " = char2int " + $1.addr->name() + "\n";
@@ -160,28 +292,43 @@ expression: expression '+' expression {
 			$$.type = E2_type;
 			$$.addr = symtab.make_temp(E2_type);
 
-			$$.code += $$.addr->name() + " = " + temp->name() + " + " + $3.addr->name() + "\n";
-		}	
+			$$.code += $$.addr->name() + " = " + temp->name() + " " + '%' + " " + $3.addr->name() + "\n";
+		}
 	}
-
-} | expression '-' expression {
-} | expression '*' expression {
-} | expression '/' expression {
-} | expression '%' expression {
 
 } | expression '=' expression {
 	// Getting types of LHS and RHS
-	Type E1_type = symtab.get($1.addr->name())->type;
-	Type E2_type = symtab.get($3.addr->name())->type;
+	Type E1_type;
+	Type E2_type;
+
+	// If E1 is a literal
+	if(symtab.get($1.addr->name()) == nullptr){
+		E1_type = $1.type;
+	}
+	else{
+		E1_type = symtab.get($1.addr->name())->type;	
+	}
+	
+	// If E2 is a literal
+	if(symtab.get($3.addr->name()) == nullptr){
+		E2_type = $3.type;
+	}
+	else{
+		E2_type = symtab.get($3.addr->name())->type;	
+	}
 	
 	// Type is same as LHS
 	$$.type = E1_type;
 	$$.addr = $1.addr;
 	$$.code = $1.code + $3.code;
 	
+	if(E1_type == E2_type){
+		Address* temp = symtab.make_temp(E1_type);
+		$$.code += temp->name() + " = " + $3.addr->name() + "\n";
+		$$.code += $1.addr->name() + " = " + temp->name() + "\n";
+	}
 	// If RHS is a different type, do type conversion
-	if(E1_type != E2_type){
-		std::cout << "Here " << std::endl;
+	else{
 		switch(E1_type){
 			case Type::Int:
 				if(E2_type == Type::Float){
@@ -270,7 +417,6 @@ expression: expression '+' expression {
 	}
 	else
 		char_val = val[0];
-	//std::cout << "char_val: " << char_val << std::endl;
 
 	$$.addr = symtab.make_char_const(char_val);
 	$$.type = Type::Char;
