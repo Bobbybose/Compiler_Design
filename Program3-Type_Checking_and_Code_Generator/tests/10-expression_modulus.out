@@ -1,0 +1,10 @@
+Code:
+%t1 = 2
+a = %t1
+%t2 = 'g'
+c = %t2
+%t3 = char2int c
+%t4 = a % %t3
+%t5 = %t4
+d = %t5
+

@@ -1,0 +1,3 @@
+int apple;
+float orange;
+char banana = '2';

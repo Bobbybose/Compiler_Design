@@ -1,0 +1,11 @@
+Code:
+%t1 = 2 * 3
+%t2 = %t1
+a = %t2
+%t3 = 3.100000
+b = %t3
+%t4 = int2float a
+%t5 = %t4 + b
+%t6 = float2int %t5
+c = %t6
+

@@ -1,0 +1,22 @@
+Code:
+%t1 = 2
+a = %t1
+%t2 = 3.100000
+b = %t2
+%t3 = 'a'
+c = %t3
+%t4 = int2float a
+%t5 = %t4 + b
+%t6 = float2int %t5
+d = %t6
+%t7 = char2int c
+%t8 = d - %t7
+%t9 = %t8
+e = %t9
+%t10 = d * a
+%t11 = %t10
+e = %t11
+%t12 = d / a
+%t13 = %t12
+e = %t13
+

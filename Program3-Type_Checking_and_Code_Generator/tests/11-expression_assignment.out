@@ -1,0 +1,6 @@
+Code:
+%t1 = 3.100000
+b = %t1
+%t2 = float2int b
+a = %t2
+

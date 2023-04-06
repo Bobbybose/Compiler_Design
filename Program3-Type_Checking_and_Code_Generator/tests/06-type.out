@@ -1,0 +1,4 @@
+Code:
+%t1 = '2'
+banana = %t1
+
