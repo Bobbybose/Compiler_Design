@@ -6,7 +6,7 @@
 
 **Course:** CS541 - Compiler Design
 
-**Assignment:** Program 3 - Type Checked and Code Generator
+**Assignment:** Program 3 - Type Checker and Code Generator
 
 - This is a code-generator for the CLUKCS language
 
@@ -52,7 +52,7 @@ Program consists of three main parts: lexical analyzer, parser, and 3AC/symbol t
 
 ### Parser (parser.y)
 - Productions are written for a subset of the CLUKCS language
-- Ambiguity is solved by declaring precedence levels at the top of the file with Bison's %left, %right, and %precedence options
+- Ambiguity is solved by declaring precedence levels with Bison's %left, %right, and %prec options
 - Symbols are used to represent the tokens and non-terminals
 - Type checking is implemented to handle type conversions for operations and assignments, as necessary
 - 3AC code is generated as parsing is done
@@ -63,19 +63,19 @@ Program consists of three main parts: lexical analyzer, parser, and 3AC/symbol t
     - Prints out error messages as needed
 - **void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std::string op)**
     - Used for type checking and conversion for +, -, *, and / operations
-#### Possible Errors:
+#### Possible User Errors:
 - Declaring a variable with auto and no assignment (ex: "auto a;")
-    - Assumes variable is an int
-- Attempting to perform a modulus operation with float operand(s) (ex: "2.1 % 3.4;")
-    - Assumes result is 0
+    - Solution: Assumes variable is an int
+- Attempting to perform a modulus operation with float operand(s)
+    - Solution: Assumes result is 0
 - Left hand side of an assignment is not a variable
     - Only semantic error
 - Trying to use a variable that doesn't exist in the scope
-    - Variable is declared as an int
+    - Solution: Variable is declared as an int
 
 ### 3AC Classes and symbol table (types.h)
 - Used to manage and generate 3AC code for the input
-- Addresses are either a varaible, temporary, integer, floating point, or character
+- Addresses are either a variable, temporary, integer, floating point, or character
     - Variables are stored in the symbol table
     - Temporaries are uniquely generated as needed
 
