@@ -628,9 +628,9 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   142,   142,   146,   148,   152,   155,   155,   158,   245,
+       0,   142,   142,   146,   148,   152,   154,   154,   157,   244,
      253,   257,   259,   261,   263,   267,   269,   271,   273,   275,
-     313,   400,   405,   410,   416,   422,   444
+     316,   403,   408,   413,   419,   425,   447
 };
 #endif
 
@@ -1251,28 +1251,27 @@ yyreduce:
 #line 152 "parser.y"
                           {
 	yyval.code = yyvsp[-1].code;
-
 }
-#line 1257 "parser.cc"
+#line 1256 "parser.cc"
     break;
 
   case 6: /* $@1: %empty  */
-#line 155 "parser.y"
+#line 154 "parser.y"
         { symtab.push(); }
-#line 1263 "parser.cc"
+#line 1262 "parser.cc"
     break;
 
   case 7: /* statement: '{' $@1 statement_list '}'  */
-#line 155 "parser.y"
+#line 154 "parser.y"
                                                {
+	yyval.code = yyvsp[-1].code;
 	symtab.pop();
-
 }
-#line 1272 "parser.cc"
+#line 1271 "parser.cc"
     break;
 
   case 8: /* statement: type IDENTIFIER '=' expression ';'  */
-#line 158 "parser.y"
+#line 157 "parser.y"
                                        {
 	yyval.code = yyvsp[-1].code;
 
@@ -1361,17 +1360,18 @@ yyreduce:
 	symtab.put(yyvsp[-3].code, LHS_type);
 
 }
-#line 1365 "parser.cc"
+#line 1364 "parser.cc"
     break;
 
   case 9: /* statement: type IDENTIFIER ';'  */
-#line 245 "parser.y"
+#line 244 "parser.y"
                         {
 	yyval.code = "";
 	symtab.put(yyvsp[-1].code, yyvsp[-2].type);
 
 	if(yyvsp[-2].type == Type::Auto){
-		std::cerr << "" << std::endl;
+		std::cerr << "ERROR: Semantic error from auto " + yyvsp[-1].code + " being declared without assignment. Assuming it is an int." << std::endl;
+		symtab.put(yyvsp[-1].code, Type::Int);
 	}
 
 }
@@ -1460,13 +1460,16 @@ yyreduce:
 	Type E2_type = symtab.get(yyvsp[0].addr->name())->type;
 
 	if(E1_type == Type::Float || E2_type == Type::Float){
-		std::cerr << "" << std::endl;
+		std::cerr << "ERROR: % (Modulus) operation does not work on floats. Assuming answer is 0." << std::endl;
+		yyval.type = Type::Int;
+		yyval.addr = symtab.make_temp(Type::Int);
+		yyval.code += yyval.addr->name() + " = " + yyvsp[-2].addr->name() + " % " + yyvsp[0].addr->name() + "\n";
 	}
 
-	if(E1_type == E2_type){
+	else if(E1_type == E2_type){
 		yyval.type = E1_type;
 		yyval.addr = symtab.make_temp(E1_type);
-		yyval.code += yyval.addr->name() + " = " + yyvsp[-2].addr->name() + " " + '%' + " " + yyvsp[0].addr->name() + "\n";
+		yyval.code += yyval.addr->name() + " = " + yyvsp[-2].addr->name() + " % " + yyvsp[0].addr->name() + "\n";
 
 	}
 	else{
@@ -1491,16 +1494,16 @@ yyreduce:
 	}
 
 }
-#line 1495 "parser.cc"
+#line 1498 "parser.cc"
     break;
 
   case 20: /* expression: expression '=' expression  */
-#line 313 "parser.y"
+#line 316 "parser.y"
                               {
 
 	// If LHS is not a variable
-	if((symtab.get(yyvsp[-2].addr->name()) != nullptr)){
-		std::cerr << "" << std::endl;
+	if((symtab.get(yyvsp[-2].addr->name()) == nullptr)){
+		std::cerr << "ERROR: LHS of assignment " + yyvsp[-2].addr->name() + " = " + yyvsp[0].addr->name() + " is not a variable." << std::endl;
 	}
 	
 	// Getting types of LHS and RHS
@@ -1584,33 +1587,33 @@ yyreduce:
 	}
 
 }
-#line 1588 "parser.cc"
+#line 1591 "parser.cc"
     break;
 
   case 21: /* expression: '-' expression  */
-#line 400 "parser.y"
+#line 403 "parser.y"
                                 {
 	yyval.addr = symtab.make_temp(yyvsp[0].type);
 	yyval.code = yyval.addr->name() + " = -" + yyvsp[0].addr->name() + "\n";
 	yyval.type = yyvsp[0].type;
 
 }
-#line 1599 "parser.cc"
+#line 1602 "parser.cc"
     break;
 
   case 22: /* expression: '(' expression ')'  */
-#line 405 "parser.y"
+#line 408 "parser.y"
                        {
 	yyval.code = yyvsp[-1].code;
 	yyval.addr = yyvsp[-1].addr;
 	yyval.type = yyvsp[-1].type;
 
 }
-#line 1610 "parser.cc"
+#line 1613 "parser.cc"
     break;
 
   case 23: /* expression: INT_LITERAL  */
-#line 410 "parser.y"
+#line 413 "parser.y"
                 {
 	yyval.code = "";
 	int val = std::stoi(yyvsp[0].code);
@@ -1618,11 +1621,11 @@ yyreduce:
 	yyval.type = Type::Int;
 
 }
-#line 1622 "parser.cc"
+#line 1625 "parser.cc"
     break;
 
   case 24: /* expression: FLOAT_LITERAL  */
-#line 416 "parser.y"
+#line 419 "parser.y"
                   {
 	yyval.code = "";
 	float val = std::stof(yyvsp[0].code);
@@ -1630,11 +1633,11 @@ yyreduce:
 	yyval.type = Type::Float;
 
 }
-#line 1634 "parser.cc"
+#line 1637 "parser.cc"
     break;
 
   case 25: /* expression: CHAR_LITERAL  */
-#line 422 "parser.y"
+#line 425 "parser.y"
                  {
 	yyval.code = "";
 	
@@ -1658,21 +1661,29 @@ yyreduce:
 	yyval.type = Type::Char;
 
 }
-#line 1662 "parser.cc"
+#line 1665 "parser.cc"
     break;
 
   case 26: /* expression: IDENTIFIER  */
-#line 444 "parser.y"
+#line 447 "parser.y"
                {
 	yyval.code = "";
+	
+	// Checking that identifier exists already
+	// If not, create new entry in symtab for it, and make it an int
+	if(symtab.get(yyvsp[0].code) == nullptr){
+		std::cerr << "ERROR: Variable " << yyvsp[0].code << " does not exist in this scope. It will now be declared as an int." << std::endl;
+		symtab.put(yyvsp[0].code, Type::Int);
+	}
+
 	yyval.addr = symtab.make_variable(yyvsp[0].code);
 	yyval.type = yyvsp[0].type;
 }
-#line 1672 "parser.cc"
+#line 1683 "parser.cc"
     break;
 
 
-#line 1676 "parser.cc"
+#line 1687 "parser.cc"
 
       default: break;
     }
@@ -1865,7 +1876,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 451 "parser.y"
+#line 462 "parser.y"
 
 
 int main()

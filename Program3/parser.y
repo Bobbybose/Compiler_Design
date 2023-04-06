@@ -151,10 +151,9 @@ statement_list: statement_list statement {
 
 statement: expression ';' {
 	$$.code = $1.code;
-
 } | '{' { symtab.push(); }  statement_list '}' {
+	$$.code = $3.code;
 	symtab.pop();
-
 } | type IDENTIFIER '=' expression ';' {
 	$$.code = $4.code;
 
@@ -247,7 +246,8 @@ statement: expression ';' {
 	symtab.put($2.code, $1.type);
 
 	if($1.type == Type::Auto){
-		std::cerr << "" << std::endl;
+		std::cerr << "ERROR: Semantic error from auto " + $2.code + " being declared without assignment. Assuming it is an int." << std::endl;
+		symtab.put($2.code, Type::Int);
 	}
 
 } | error ';' { // error is a special token defined by bison
@@ -280,13 +280,16 @@ expression: expression '+' expression {
 	Type E2_type = symtab.get($3.addr->name())->type;
 
 	if(E1_type == Type::Float || E2_type == Type::Float){
-		std::cerr << "" << std::endl;
+		std::cerr << "ERROR: % (Modulus) operation does not work on floats. Assuming answer is 0." << std::endl;
+		$$.type = Type::Int;
+		$$.addr = symtab.make_temp(Type::Int);
+		$$.code += $$.addr->name() + " = " + $1.addr->name() + " % " + $3.addr->name() + "\n";
 	}
 
-	if(E1_type == E2_type){
+	else if(E1_type == E2_type){
 		$$.type = E1_type;
 		$$.addr = symtab.make_temp(E1_type);
-		$$.code += $$.addr->name() + " = " + $1.addr->name() + " " + '%' + " " + $3.addr->name() + "\n";
+		$$.code += $$.addr->name() + " = " + $1.addr->name() + " % " + $3.addr->name() + "\n";
 
 	}
 	else{
@@ -313,8 +316,8 @@ expression: expression '+' expression {
 } | expression '=' expression {
 
 	// If LHS is not a variable
-	if((symtab.get($1.addr->name()) != nullptr)){
-		std::cerr << "" << std::endl;
+	if((symtab.get($1.addr->name()) == nullptr)){
+		std::cerr << "ERROR: LHS of assignment " + $1.addr->name() + " = " + $3.addr->name() + " is not a variable." << std::endl;
 	}
 	
 	// Getting types of LHS and RHS
@@ -443,6 +446,14 @@ expression: expression '+' expression {
 
 } | IDENTIFIER {
 	$$.code = "";
+	
+	// Checking that identifier exists already
+	// If not, create new entry in symtab for it, and make it an int
+	if(symtab.get($1.code) == nullptr){
+		std::cerr << "ERROR: Variable " << $1.code << " does not exist in this scope. It will now be declared as an int." << std::endl;
+		symtab.put($1.code, Type::Int);
+	}
+
 	$$.addr = symtab.make_variable($1.code);
 	$$.type = $1.type;
 };

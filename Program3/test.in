@@ -1,2 +1,9 @@
-auto a = 2.1;
-int b = a;
+int a = 2;
+int b;
+{
+    float d = 2.1;
+    int a = 1;
+    b=a;
+}
+int c = a;
+float e = d;
