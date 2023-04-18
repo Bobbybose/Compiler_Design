@@ -14,101 +14,7 @@ void yyerror(const char *msg)
 // The unique global symbol table.
 symbol_table symtab;
 
-// Givens: Pointers to result and operand symbols, and type of operation being computed
-// Returns: None. Symbols are passed in by reference so nothing needs to be returned
-// Description: Does type checking for expression operations and sets code, addr, and type for result
-void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std::string op){
-	E0.code = E1.code + E2.code;
-	
-	// Types of LHS and RHS
-	Type E1_type;
-	Type E2_type;
-
-	// Obtaining E1 operand type
-	if(symtab.get(E1.addr->name()) == nullptr)			// If LHS is a literal
-		E1_type = E1.type;
-	else
-		E1_type = symtab.get(E1.addr->name())->type;	
-	// Obtaining E2 operand type
-	if(symtab.get(E2.addr->name()) == nullptr)			// If RHS is a literal
-		E2_type = E2.type;
-	else
-		E2_type = symtab.get(E2.addr->name())->type;	
-
-	// If both operands are the same type
-	if(E1_type == E2_type){
-		E0.type = E1_type;
-		E0.addr = symtab.make_temp(E1_type);
-		E0.code += E0.addr->name() + " = " + E1.addr->name() + " " + op + " " + E2.addr->name() + "\n";
-	}
-	// If operands have different types
-	else{
-		// If E1 is a float, must convert E2 to float
-		if(E1_type == Type::Float){
-			if(E2_type == Type::Int){
-				// Converting E2 from int to float
-				Address* temp = symtab.make_temp(E1_type);
-				E0.code += temp->name() + " = int2float " + E2.addr->name() + "\n";
-				E0.type = E1_type;
-				E0.addr = symtab.make_temp(E1_type);
-				E0.code += E0.addr->name() + " = " + E1.addr->name() + " " + op + " " + temp->name() + "\n";
-			}
-			if(E2_type == Type::Char){
-				// Converting E2 from char to int
-				Address* temp = symtab.make_temp(Type::Int);
-				E0.code += temp->name() + " = char2int " + E2.addr->name() + "\n";
-				
-				// Converting from int to float
-				Address* temp2 = symtab.make_temp(E1_type);
-				E0.code += temp2->name() + " = int2float " + temp->name() + "\n";
-				E0.type = E1_type;
-				E0.addr = symtab.make_temp(E1_type);
-				E0.code += E0.addr->name() + " = " + E1.addr->name() + " " + op + " " + temp2->name() + "\n";
-			}
-		}
-		// If E2 is a float, must convert E1 to float
-		else if(E2_type == Type::Float){
-			if(E1_type == Type::Int){
-				// Converting E1 from int to float
-				Address* temp = symtab.make_temp(E2_type);
-				E0.code += temp->name() + " = int2float " + E1.addr->name() + "\n";
-				E0.type = E2_type;
-				E0.addr = symtab.make_temp(E2_type);
-				E0.code += E0.addr->name() + " = " + temp->name() + " " + op + " " + E2.addr->name() + "\n";
-			}
-			if(E1_type == Type::Char){
-				// Converting E1 from char to int
-				Address* temp = symtab.make_temp(Type::Int);
-				E0.code += temp->name() + " = char2int " + E1.addr->name() + "\n";
-				
-				// Converting from int to float
-				Address* temp2 = symtab.make_temp(E2_type);
-				E0.code += temp2->name() + " = int2float " + temp->name() + "\n";
-				E0.type = E2_type;
-				E0.addr = symtab.make_temp(E2_type);
-				E0.code += E0.addr->name() + " = " + temp->name() + " " + op + " " + E2.addr->name() + "\n";
-			}
-		}
-		// If E1 is an int, must convert E2 to int
-		else if(E1_type == Type::Int){
-			// Converting E2 from char to int
-			Address* temp = symtab.make_temp(E1_type);
-			E0.code += temp->name() + " = char2int " + E2.addr->name() + "\n";
-			E0.type = E1_type;
-			E0.addr = symtab.make_temp(E1_type);
-			E0.code += E0.addr->name() + " = " + E1.addr->name() + " " + op + " " + temp->name() + "\n";
-		}
-		// If E2 is an int, must convert E1 to int		
-		else if(E2_type == Type::Int){
-			// Converting E1 from char to int
-			Address* temp = symtab.make_temp(E2_type);
-			E0.code += temp->name() + " = char2int " + E1.addr->name() + "\n";
-			E0.type = E2_type;
-			E0.addr = symtab.make_temp(E2_type);
-			E0.code += E0.addr->name() + " = " + temp->name() + " " + op + " " + E2.addr->name() + "\n";
-		}	
-	}
-} // operation_type_checking()
+int return_statement = 0;
 
 
 // Givens: Type to get string of
@@ -130,6 +36,144 @@ std::string get_type_string(Type t){
 			break;
 	}
 } // get_type_string()
+
+
+// Givens: Pointers to result and operand symbols, and type of operation being computed (op1 is for int/char, op2 is for floats)
+// Returns: None. Symbols are passed in by reference so nothing needs to be returned
+// Description: Does type checking for expression operations and sets code, addr, and type for result
+void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std::string op1, std::string op2){
+	E0.code = E1.code + E2.code;
+
+	// Types of E1 and E2
+	Type E1_type;
+	Type E2_type;
+std::cout <<"Here\n";
+std::cout << get_type_string(E1.addr) << "\n";
+	// Names of E1 and E2 (might be temps if variable needs to be loaded first)
+	std::string E1_name = E1.addr->name();
+	std::cout <<"Here1\n";
+	std::string E2_name = E2.addr->name();
+std::cout <<"Here2\n";
+	// Obtaining E1 type and name
+	if(dynamic_cast<Variable *>(E1.addr) != nullptr){
+		E1_type = symtab.get(E1_name)->type;
+
+		// Loading variable
+		Address* temp = symtab.make_temp(E1_type);
+		E1_name = temp->name();
+		Variable* var = symtab.make_variable(E1.addr->name());
+		E0.code += temp->name() + " = load " + get_type_string(E1_type) + ", " + get_type_string(E1_type) + " *" + var->location()->name() + "\n";
+	}
+	else
+		E1_type = E1.type;
+	// Obtaining E2 type and name
+	if(dynamic_cast<Variable *>(E2.addr) != nullptr){
+		E2_type = symtab.get(E2_name)->type;
+
+		// Loading variable
+		Address* temp = symtab.make_temp(E2_type);
+		E2_name = temp->name();
+		Variable* var = symtab.make_variable(E2.addr->name());
+		E0.code += temp->name() + " = load " + get_type_string(E2_type) + ", " + get_type_string(E2_type) + " *" + var->location()->name() + "\n";
+	}
+	else
+		E2_type = E2.type;
+
+	// If both operands are the same type
+	if(E1_type == E2_type){
+		E0.type = E1_type;
+		E0.addr = symtab.make_temp(E1_type);
+		E0.code += E0.addr->name() + " = alloca " + get_type_string(E0.type) + "\n";
+		
+		if(E0.type == Type::Float)
+			E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+		else
+			E0.code += E0.addr->name() + " = " + op1 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+	}
+	// If operands have different types
+	/*else{
+		// If E1 is a float, must convert E2 to float
+		if(E1_type == Type::Float){
+			if(E2_type == Type::Int){
+				// Converting E2 from int to float
+				Address* temp = symtab.make_temp(E1_type);
+				E0.code += temp->name() + " = sitofp i64 " + E2_name + " to float\n";
+				E2_name = temp->name();
+				E2_type = temp->type();
+				
+				E0.type = E1_type;
+				E0.addr = symtab.make_temp(E1_type);
+				E0.code += E0.addr->name() + " = alloca " + E0.type + "\n";
+				E0.code += E0.addr->name() + " = " + op + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+			}
+			if(E2_type == Type::Char){
+				// Converting E2 from char to float
+				Address* temp = symtab.make_temp(E1_type);
+				E0.code += temp->name() + " = sitofp i8 " + E2_name + " to float\n";
+				E2_name = temp->name();
+				E2_type = temp->type();
+				
+				E0.type = E1_type;
+				E0.addr = symtab.make_temp(E1_type);
+				E0.code += E0.addr->name() + " = alloca " + E0.type + "\n";
+				E0.code += E0.addr->name() + " = " + op + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+			}
+		}
+		// If E2 is a float, must convert E1 to float
+		else if(E2_type == Type::Float){
+			if(E1_type == Type::Int){
+				// Converting E1 from int to float
+				Address* temp = symtab.make_temp(E2_type);
+				E0.code += temp->name() + " = sitofp i64 " + E1_name + " to float\n";
+				E1_name = temp->name();
+				E1_type = temp->type();
+				
+				E0.type = E2_type;
+				E0.addr = symtab.make_temp(E2_type);
+				E0.code += E0.addr->name() + " = alloca " + E0.type + "\n";
+				E0.code += E0.addr->name() + " = " + op + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+			}
+			if(E1_type == Type::Char){
+				// Converting E1 from char to float
+				Address* temp = symtab.make_temp(E2_type);
+				E0.code += temp->name() + " = sitofp i8 " + E1_name + " to float\n";
+				E1_name = temp->name();
+				E1_type = temp->type();
+				
+				E0.type = E2_type;
+				E0.addr = symtab.make_temp(E2_type);
+				E0.code += E0.addr->name() + " = alloca " + E0.type + "\n";
+				E0.code += E0.addr->name() + " = " + op + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+			}
+		}
+		// If E1 is an int, must convert E2 to int
+		else if(E1_type == Type::Int){
+			// Converting E2 from char to int
+				Address* temp = symtab.make_temp(E1_type);
+				E0.code += temp->name() + " = sext i8 " + E2_name + " to i64\n";
+				E2_name = temp->name();
+				E2_type = temp->type();
+				
+				E0.type = E1_type;
+				E0.addr = symtab.make_temp(E1_type);
+				E0.code += E0.addr->name() + " = alloca " + E0.type + "\n";
+				E0.code += E0.addr->name() + " = " + op + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+		}
+		// If E2 is an int, must convert E1 to int		
+		else if(E2_type == Type::Int){
+			// Converting E1 from char to int
+				Address* temp = symtab.make_temp(E2_type);
+				E0.code += temp->name() + " = sext i8 " + E1_name + " to i64\n";
+				E1_name = temp->name();
+				E1_type = temp->type();
+				
+				E0.type = E2_type;
+				E0.addr = symtab.make_temp(E2_type);
+				E0.code += E0.addr->name() + " = alloca " + E0.type + "\n";
+				E0.code += E0.addr->name() + " = " + op + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+		}	
+	}*/
+} // operation_type_checking()
 
 
 // Givens: Output code to convert
@@ -182,13 +226,20 @@ std::string output_conversion(std::string output){
 %%
 
 program: statement_list {
+	// Header text for llvm file
 	std::string header1 = "target datalayout = \"e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128\"\n" ;
-	std::string header2 = + "target triple = \"x86_64-pc-linux-gnu\"\n\n";
-	std::string header3 = + "define dso_local i32 @main() {\n";
+	std::string header2 = "target triple = \"x86_64-pc-linux-gnu\"\n\n";
+	std::string header3 = "define dso_local i32 @main() {\n";
+	// Might need to add return statement at the end
+	std::string return_text = "  ret i32 0\n";
 
 	std::string converted_code = output_conversion($1.code);
-	
-	std::cout << "Code:\n" << header1 << header2 << header3 << converted_code << "}" << "\n";
+
+	// Printing llvm code to stdout
+	if(return_statement == 1)
+		std::cout << "Code:\n" << header1 << header2 << header3 << converted_code << "}" << "\n";
+	else
+		std::cout << "Code:\n" << header1 << header2 << header3 << converted_code << return_text << "}" << "\n";
 };
 
 statement_list: statement_list statement {
@@ -213,7 +264,7 @@ statement: expression ';' {
 	// Tracking LHS type
 	Type LHS_type;
 	
-	// Obtaining RHS
+	// Obtaining RHS type
 	if(dynamic_cast<Variable *>($4.addr) != nullptr){	// If RHS is a variable
 		RHS_type = symtab.get(RHS_name)->type;
 
@@ -240,14 +291,14 @@ statement: expression ';' {
 				if(RHS_type == Type::Float){
 					// Converting RHS from float to int
 					Address* temp = symtab.make_temp(LHS_type);
-					$$.code += temp->name() + " = fptosi float " + RHS_name + " to i64\n";
+					$$.code += temp->name() + " = fptosi float " + RHS_name + " to i32\n";
 					RHS_name = temp->name();
 					RHS_type = temp->type();
 				}
 				else if(RHS_type == Type::Char){
 					// Converting RHS from char to int
 					Address* temp = symtab.make_temp(LHS_type);
-					$$.code += temp->name() + " = sext i8 " + RHS_name + " to i64\n";
+					$$.code += temp->name() + " = sext i8 " + RHS_name + " to i32\n";
 					RHS_name = temp->name();
 					RHS_type = temp->type();
 				}
@@ -317,6 +368,51 @@ statement: expression ';' {
 	$$.code += var->location()->name() + " = alloca " + var_type + "\n";
 
 } | RETURN expression ';' {
+	$$.code = $2.code;
+
+	// Tracking type of returning value
+	Type return_type;
+	// Tracking name of returning value or variable
+	std::string return_name = $2.addr->name();
+	
+	// Marking that a return statement is present
+	return_statement = 1;
+	
+	// If returning a variable
+	if(dynamic_cast<Variable *>($2.addr) != nullptr){
+		return_type = symtab.get(return_name)->type;
+
+		// Loading variable
+		Address* temp = symtab.make_temp($2.type);
+		return_name = temp->name();
+		Variable* var = symtab.make_variable($2.addr->name());
+		$$.code += temp->name() + " = load " + get_type_string(return_type) + ", " + get_type_string(return_type) + " *" + var->location()->name() + "\n";
+	}
+	else
+		return_type = $2.type;
+
+	// Type converting return statement if needed
+	if(return_type != Type::Int){
+		if(return_type == Type::Float){
+			// Converting value from float to int
+			Address* temp = symtab.make_temp(Type::Int);
+			$$.code += temp->name() + " = fptosi float " + return_name + " to i32\n";
+			return_name = temp->name();
+			return_type = temp->type();
+		}
+		else if(return_type == Type::Char){
+			// Converting value from char to int
+			Address* temp = symtab.make_temp(Type::Int);
+			$$.code += temp->name() + " = sext i8 " + return_name + " to i32\n";
+			return_name = temp->name();
+			return_type = temp->type();
+		}
+	}
+
+	// Adding return statement
+	$$.code += "ret " + get_type_string(return_type) + " " + return_name + "\n";
+	
+
 } | error ';' { // error is a special token defined by bison
 	yyerrok;
 };
@@ -332,7 +428,8 @@ type: INT {
 };
 
 // The +, -, *, and / operations are all handled by operation_type_checking()
-expression: expression '+' expression {			
+expression: expression '+' expression {	
+	operation_type_checking($$, $1, $2, "add", "fadd");
 } | expression '-' expression {
 } | expression '*' expression {
 } | expression '/' expression {
