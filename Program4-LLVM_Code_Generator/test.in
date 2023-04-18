@@ -1,1 +1,1 @@
-int a = 1+1;
+int x = 16; return x / 2 ;
