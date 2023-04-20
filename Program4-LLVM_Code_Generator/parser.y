@@ -14,6 +14,7 @@ void yyerror(const char *msg)
 // The unique global symbol table.
 symbol_table symtab;
 
+// Tracks whether a return statement has been translated already
 int return_statement = 0;
 
 
@@ -111,7 +112,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 				
 				E0.type = E1_type;
 				E0.addr = symtab.make_temp(E1_type);
-				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + " " + E1_name + ", " + E2_name + "\n";
 			}
 			if(E2_type == Type::Char){
 				// Converting E2 from char to float
@@ -122,7 +123,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 				
 				E0.type = E1_type;
 				E0.addr = symtab.make_temp(E1_type);
-				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + " " + E1_name + ", " + E2_name + "\n";
 			}
 		}
 		// If E2 is a float, must convert E1 to float
@@ -136,7 +137,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 				
 				E0.type = E2_type;
 				E0.addr = symtab.make_temp(E2_type);
-				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + " " + E1_name + ", " + E2_name + "\n";
 			}
 			if(E1_type == Type::Char){
 				// Converting E1 from char to float
@@ -147,7 +148,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 				
 				E0.type = E2_type;
 				E0.addr = symtab.make_temp(E2_type);
-				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + " " + E1_name + ", " + E2_name + "\n";
 			}
 		}
 		// If E1 is an int, must convert E2 to int
@@ -160,7 +161,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 				
 				E0.type = E1_type;
 				E0.addr = symtab.make_temp(E1_type);
-				E0.code += E0.addr->name() + " = " + op1 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+				E0.code += E0.addr->name() + " = " + op1 + " " + get_type_string(E0.type) + " " + E1_name + ", " + E2_name + "\n";
 		}
 		// If E2 is an int, must convert E1 to int		
 		else if(E2_type == Type::Int){
@@ -172,7 +173,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 				
 				E0.type = E2_type;
 				E0.addr = symtab.make_temp(E2_type);
-				E0.code += E0.addr->name() + " = " + op1 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+				E0.code += E0.addr->name() + " = " + op1 + " " + get_type_string(E0.type) + " " + E1_name + ", " + E2_name + "\n";
 		}	
 	}
 } // operation_type_checking()
@@ -328,7 +329,7 @@ statement: expression ';' {
 	Variable* var2 = symtab.make_variable($2.code);	
 	$$.code += var2->location()->name() + " = alloca " + get_type_string(LHS_type) + "\n";
 
-	//Storing value
+	// Storing value
 	$$.code += "store " + get_type_string(RHS_type) + " " + RHS_name + ", " + get_type_string(LHS_type) + "* " + var2->location()->name() + "\n";
 
 } | type IDENTIFIER ';' {
@@ -408,7 +409,7 @@ type: INT {
 	$$.type = Type::Auto;
 };
 
-// The +, -, *, and / operations are all handled by operation_type_checking()
+// The +, -, *, /, and % operations are all handled by operation_type_checking()
 expression: expression '+' expression {	
 	operation_type_checking($$, $1, $3, "add", "fadd");
 } | expression '-' expression {
@@ -436,14 +437,10 @@ expression: expression '+' expression {
 	std::string E2_name = $3.addr->name();
 	
 	// Obtaining E1 type and name
-	if(dynamic_cast<Variable *>($1.addr) != nullptr){
+	if(dynamic_cast<Variable *>($1.addr) != nullptr){			// If RHS is a variable
 		E1_type = symtab.get(E1_name)->type;
-
-		// Loading variable
-		Address* temp = symtab.make_temp(E1_type);
-		E1_name = temp->name();
 		Variable* var = symtab.make_variable($1.addr->name());
-		$$.code += temp->name() + " = load " + get_type_string(E1_type) + ", " + get_type_string(E1_type) + " *" + var->location()->name() + "\n";
+		E1_name = var->location()->name();
 	}
 	else
 		E1_type = $1.type;
@@ -509,6 +506,8 @@ expression: expression '+' expression {
 
 	// If negated expression is a variable, must load first
 	if(dynamic_cast<Variable *>($2.addr) != nullptr){
+		$$.type = symtab.get($2.addr->name())->type;
+
 		// Load variable
 		Address* temp = symtab.make_temp($2.type);
 		Variable* var = symtab.make_variable($2.addr->name());
@@ -523,6 +522,8 @@ expression: expression '+' expression {
 	}
 	// Else it is a constant
 	else{
+		$$.type = $2.type;
+		
 		// Initializing and setting new temp
 		$$.addr = symtab.make_temp($2.type);
 		if($2.type == Type::Float)
@@ -530,8 +531,6 @@ expression: expression '+' expression {
 		else
 			$$.code += $$.addr->name() + " = sub " + exp_type + " 0, " + $2.addr->name() + "\n";
 	}
-
-	$$.type = $2.type;
 
 } | '(' expression ')' {
 	$$.code = $2.code;

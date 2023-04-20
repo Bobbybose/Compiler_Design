@@ -84,6 +84,7 @@ void yyerror(const char *msg)
 // The unique global symbol table.
 symbol_table symtab;
 
+// Tracks whether a return statement has been translated already
 int return_statement = 0;
 
 
@@ -181,7 +182,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 				
 				E0.type = E1_type;
 				E0.addr = symtab.make_temp(E1_type);
-				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + " " + E1_name + ", " + E2_name + "\n";
 			}
 			if(E2_type == Type::Char){
 				// Converting E2 from char to float
@@ -192,7 +193,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 				
 				E0.type = E1_type;
 				E0.addr = symtab.make_temp(E1_type);
-				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + " " + E1_name + ", " + E2_name + "\n";
 			}
 		}
 		// If E2 is a float, must convert E1 to float
@@ -206,7 +207,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 				
 				E0.type = E2_type;
 				E0.addr = symtab.make_temp(E2_type);
-				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + " " + E1_name + ", " + E2_name + "\n";
 			}
 			if(E1_type == Type::Char){
 				// Converting E1 from char to float
@@ -217,7 +218,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 				
 				E0.type = E2_type;
 				E0.addr = symtab.make_temp(E2_type);
-				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+				E0.code += E0.addr->name() + " = " + op2 + " " + get_type_string(E0.type) + " " + E1_name + ", " + E2_name + "\n";
 			}
 		}
 		// If E1 is an int, must convert E2 to int
@@ -230,7 +231,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 				
 				E0.type = E1_type;
 				E0.addr = symtab.make_temp(E1_type);
-				E0.code += E0.addr->name() + " = " + op1 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+				E0.code += E0.addr->name() + " = " + op1 + " " + get_type_string(E0.type) + " " + E1_name + ", " + E2_name + "\n";
 		}
 		// If E2 is an int, must convert E1 to int		
 		else if(E2_type == Type::Int){
@@ -242,7 +243,7 @@ void operation_type_checking(parser_val &E0, parser_val &E1, parser_val &E2, std
 				
 				E0.type = E2_type;
 				E0.addr = symtab.make_temp(E2_type);
-				E0.code += E0.addr->name() + " = " + op1 + " " + get_type_string(E0.type) + ", " + get_type_string(E0.type) + "\n";
+				E0.code += E0.addr->name() + " = " + op1 + " " + get_type_string(E0.type) + " " + E1_name + ", " + E2_name + "\n";
 		}	
 	}
 } // operation_type_checking()
@@ -272,7 +273,7 @@ std::string output_conversion(std::string output){
 
 
 
-#line 276 "parser.cc"
+#line 277 "parser.cc"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -717,9 +718,9 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   230,   230,   247,   249,   253,   255,   255,   259,   334,
-     351,   397,   401,   403,   405,   407,   412,   414,   416,   418,
-     420,   422,   506,   536,   541,   548,   555,   578
+       0,   231,   231,   248,   250,   254,   256,   256,   260,   335,
+     352,   398,   402,   404,   406,   408,   413,   415,   417,   419,
+     421,   423,   503,   535,   540,   547,   554,   577
 };
 #endif
 
@@ -1317,7 +1318,7 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: statement_list  */
-#line 230 "parser.y"
+#line 231 "parser.y"
                         {
 	// Header text for llvm file
 	std::string header1 = "target datalayout = \"e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128\"\n" ;
@@ -1334,51 +1335,51 @@ yyreduce:
 	else
 		std::cout << header1 << header2 << header3 << converted_code << return_text << "}" << "\n";
 }
-#line 1338 "parser.cc"
+#line 1339 "parser.cc"
     break;
 
   case 3: /* statement_list: statement_list statement  */
-#line 247 "parser.y"
+#line 248 "parser.y"
                                          {
 	yyval.code = yyvsp[-1].code + yyvsp[0].code;
 }
-#line 1346 "parser.cc"
+#line 1347 "parser.cc"
     break;
 
   case 4: /* statement_list: %empty  */
-#line 249 "parser.y"
+#line 250 "parser.y"
            {
 	yyval.code = "";
 }
-#line 1354 "parser.cc"
+#line 1355 "parser.cc"
     break;
 
   case 5: /* statement: expression ';'  */
-#line 253 "parser.y"
+#line 254 "parser.y"
                           {
 	yyval.code = yyvsp[-1].code;
 }
-#line 1362 "parser.cc"
+#line 1363 "parser.cc"
     break;
 
   case 6: /* $@1: %empty  */
-#line 255 "parser.y"
+#line 256 "parser.y"
         { symtab.push(); }
-#line 1368 "parser.cc"
+#line 1369 "parser.cc"
     break;
 
   case 7: /* statement: '{' $@1 statement_list '}'  */
-#line 255 "parser.y"
+#line 256 "parser.y"
                                                {
 	yyval.code = yyvsp[-1].code;
 	symtab.pop();
 
 }
-#line 1378 "parser.cc"
+#line 1379 "parser.cc"
     break;
 
   case 8: /* statement: type IDENTIFIER '=' expression ';'  */
-#line 259 "parser.y"
+#line 260 "parser.y"
                                        {
 	yyval.code = yyvsp[-1].code;
 	
@@ -1451,15 +1452,15 @@ yyreduce:
 	Variable* var2 = symtab.make_variable(yyvsp[-3].code);	
 	yyval.code += var2->location()->name() + " = alloca " + get_type_string(LHS_type) + "\n";
 
-	//Storing value
+	// Storing value
 	yyval.code += "store " + get_type_string(RHS_type) + " " + RHS_name + ", " + get_type_string(LHS_type) + "* " + var2->location()->name() + "\n";
 
 }
-#line 1459 "parser.cc"
+#line 1460 "parser.cc"
     break;
 
   case 9: /* statement: type IDENTIFIER ';'  */
-#line 334 "parser.y"
+#line 335 "parser.y"
                         {
 	yyval.code = "";
 	std::string var_type = get_type_string(yyvsp[-2].type);
@@ -1478,11 +1479,11 @@ yyreduce:
 	yyval.code += var->location()->name() + " = alloca " + var_type + "\n";
 
 }
-#line 1482 "parser.cc"
+#line 1483 "parser.cc"
     break;
 
   case 10: /* statement: RETURN expression ';'  */
-#line 351 "parser.y"
+#line 352 "parser.y"
                           {
 	yyval.code = yyvsp[-1].code;
 
@@ -1530,91 +1531,91 @@ yyreduce:
 	
 
 }
-#line 1534 "parser.cc"
+#line 1535 "parser.cc"
     break;
 
   case 11: /* statement: error ';'  */
-#line 397 "parser.y"
+#line 398 "parser.y"
               { // error is a special token defined by bison
 	yyerrok;
 }
-#line 1542 "parser.cc"
+#line 1543 "parser.cc"
     break;
 
   case 12: /* type: INT  */
-#line 401 "parser.y"
+#line 402 "parser.y"
           {
 	yyval.type = Type::Int;
 }
-#line 1550 "parser.cc"
+#line 1551 "parser.cc"
     break;
 
   case 13: /* type: FLOAT  */
-#line 403 "parser.y"
+#line 404 "parser.y"
           {
 	yyval.type = Type::Float;
 }
-#line 1558 "parser.cc"
+#line 1559 "parser.cc"
     break;
 
   case 14: /* type: CHAR  */
-#line 405 "parser.y"
+#line 406 "parser.y"
          {
 	yyval.type = Type::Char;
 }
-#line 1566 "parser.cc"
+#line 1567 "parser.cc"
     break;
 
   case 15: /* type: AUTO  */
-#line 407 "parser.y"
+#line 408 "parser.y"
          {
 	yyval.type = Type::Auto;
 }
-#line 1574 "parser.cc"
+#line 1575 "parser.cc"
     break;
 
   case 16: /* expression: expression '+' expression  */
-#line 412 "parser.y"
+#line 413 "parser.y"
                                       {	
 	operation_type_checking(yyval, yyvsp[-2], yyvsp[0], "add", "fadd");
 }
-#line 1582 "parser.cc"
+#line 1583 "parser.cc"
     break;
 
   case 17: /* expression: expression '-' expression  */
-#line 414 "parser.y"
+#line 415 "parser.y"
                               {
 	operation_type_checking(yyval, yyvsp[-2], yyvsp[0], "sub", "fsub");
 }
-#line 1590 "parser.cc"
+#line 1591 "parser.cc"
     break;
 
   case 18: /* expression: expression '*' expression  */
-#line 416 "parser.y"
+#line 417 "parser.y"
                               {
 	operation_type_checking(yyval, yyvsp[-2], yyvsp[0], "mul", "fmul");
 }
-#line 1598 "parser.cc"
+#line 1599 "parser.cc"
     break;
 
   case 19: /* expression: expression '/' expression  */
-#line 418 "parser.y"
+#line 419 "parser.y"
                               {
 	operation_type_checking(yyval, yyvsp[-2], yyvsp[0], "sdiv", "fdiv");
 }
-#line 1606 "parser.cc"
+#line 1607 "parser.cc"
     break;
 
   case 20: /* expression: expression '%' expression  */
-#line 420 "parser.y"
+#line 421 "parser.y"
                               {
 	operation_type_checking(yyval, yyvsp[-2], yyvsp[0], "srem", "");
 }
-#line 1614 "parser.cc"
+#line 1615 "parser.cc"
     break;
 
   case 21: /* expression: expression '=' expression  */
-#line 422 "parser.y"
+#line 423 "parser.y"
                               {
 	// If LHS is not a variable
 	if((symtab.get(yyvsp[-2].addr->name()) == nullptr)){
@@ -1632,14 +1633,10 @@ yyreduce:
 	std::string E2_name = yyvsp[0].addr->name();
 	
 	// Obtaining E1 type and name
-	if(dynamic_cast<Variable *>(yyvsp[-2].addr) != nullptr){
+	if(dynamic_cast<Variable *>(yyvsp[-2].addr) != nullptr){			// If RHS is a variable
 		E1_type = symtab.get(E1_name)->type;
-
-		// Loading variable
-		Address* temp = symtab.make_temp(E1_type);
-		E1_name = temp->name();
 		Variable* var = symtab.make_variable(yyvsp[-2].addr->name());
-		yyval.code += temp->name() + " = load " + get_type_string(E1_type) + ", " + get_type_string(E1_type) + " *" + var->location()->name() + "\n";
+		E1_name = var->location()->name();
 	}
 	else
 		E1_type = yyvsp[-2].type;
@@ -1700,17 +1697,19 @@ yyreduce:
 	
 
 }
-#line 1704 "parser.cc"
+#line 1701 "parser.cc"
     break;
 
   case 22: /* expression: '-' expression  */
-#line 506 "parser.y"
+#line 503 "parser.y"
                                 {
 	yyval.code = "";
 	std::string exp_type = get_type_string(yyvsp[0].type);
 
 	// If negated expression is a variable, must load first
 	if(dynamic_cast<Variable *>(yyvsp[0].addr) != nullptr){
+		yyval.type = symtab.get(yyvsp[0].addr->name())->type;
+
 		// Load variable
 		Address* temp = symtab.make_temp(yyvsp[0].type);
 		Variable* var = symtab.make_variable(yyvsp[0].addr->name());
@@ -1725,6 +1724,8 @@ yyreduce:
 	}
 	// Else it is a constant
 	else{
+		yyval.type = yyvsp[0].type;
+		
 		// Initializing and setting new temp
 		yyval.addr = symtab.make_temp(yyvsp[0].type);
 		if(yyvsp[0].type == Type::Float)
@@ -1733,25 +1734,23 @@ yyreduce:
 			yyval.code += yyval.addr->name() + " = sub " + exp_type + " 0, " + yyvsp[0].addr->name() + "\n";
 	}
 
-	yyval.type = yyvsp[0].type;
-
 }
-#line 1740 "parser.cc"
+#line 1739 "parser.cc"
     break;
 
   case 23: /* expression: '(' expression ')'  */
-#line 536 "parser.y"
+#line 535 "parser.y"
                        {
 	yyval.code = yyvsp[-1].code;
 	yyval.addr = yyvsp[-1].addr;
 	yyval.type = yyvsp[-1].type;
 
 }
-#line 1751 "parser.cc"
+#line 1750 "parser.cc"
     break;
 
   case 24: /* expression: INT_LITERAL  */
-#line 541 "parser.y"
+#line 540 "parser.y"
                 {
 	yyval.code = "";
 	// Converting input to an int
@@ -1760,11 +1759,11 @@ yyreduce:
 	yyval.type = Type::Int;
 
 }
-#line 1764 "parser.cc"
+#line 1763 "parser.cc"
     break;
 
   case 25: /* expression: FLOAT_LITERAL  */
-#line 548 "parser.y"
+#line 547 "parser.y"
                   {
 	yyval.code = "";
 	// Converting input to a float
@@ -1773,11 +1772,11 @@ yyreduce:
 	yyval.type = Type::Float;
 
 }
-#line 1777 "parser.cc"
+#line 1776 "parser.cc"
     break;
 
   case 26: /* expression: CHAR_LITERAL  */
-#line 555 "parser.y"
+#line 554 "parser.y"
                  {
 	yyval.code = "";
 	
@@ -1802,11 +1801,11 @@ yyreduce:
 	yyval.type = Type::Char;
 
 }
-#line 1806 "parser.cc"
+#line 1805 "parser.cc"
     break;
 
   case 27: /* expression: IDENTIFIER  */
-#line 578 "parser.y"
+#line 577 "parser.y"
                {
 	yyval.code = "";
 	
@@ -1825,11 +1824,11 @@ yyreduce:
 	
 	yyval.type = yyvsp[0].type;
 }
-#line 1829 "parser.cc"
+#line 1828 "parser.cc"
     break;
 
 
-#line 1833 "parser.cc"
+#line 1832 "parser.cc"
 
       default: break;
     }
@@ -2022,7 +2021,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 598 "parser.y"
+#line 597 "parser.y"
 
 
 int main()
