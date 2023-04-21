@@ -5,3 +5,5 @@ int b;
     b = a;
 }
 int c = a;
+return c;
+// Should return 2

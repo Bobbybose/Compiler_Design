@@ -14,5 +14,6 @@ define dso_local i32 @main() {
   %t8 = fptosi float %t7 to i32
   %t9 = alloca i32
   store i32 %t8, i32* %t9
-  ret i32 0
+  %t10 = load i32, i32 *%t9
+  ret i32 %t10
 }

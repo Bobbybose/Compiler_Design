@@ -1,2 +1,4 @@
 int a = 2;
 a;
+return a;
+// Should return 2

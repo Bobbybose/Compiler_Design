@@ -3,15 +3,10 @@ target triple = "x86_64-pc-linux-gnu"
 
 define dso_local i32 @main() {
   %t1 = alloca i32
-  store i32 2, i32* %t1
   %t2 = alloca float
-  store float 0x4002666660000000, float* %t2
   %t3 = alloca i8
   store i8 97, i8* %t3
-  %t4 = alloca i32
-  store i32 2, i32* %t4
-  %t5 = load i32, i32 *%t4
-  %t6 = sitofp i32 %t5 to float
-  store float %t6, float* %t2
-  ret i32 0
+  %t4 = load i8, i8 *%t3
+  %t5 = sext i8 %t4 to i32
+  ret i32 %t5
 }

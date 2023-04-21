@@ -4,3 +4,5 @@ int a;
 'c';
 a;
 a = 1;
+return a;
+// Should return 1

@@ -1,3 +1,5 @@
 int a = 2;
 char c = 'g';
-int d = a % c;
+int d = c % a;
+return d;
+// Should return 1

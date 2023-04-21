@@ -3,3 +3,5 @@ float b = 2.3;
 char c = 'a';
 auto d = 2;
 b = d;
+return b;
+// Should return 2

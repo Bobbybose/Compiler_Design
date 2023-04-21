@@ -1,0 +1,19 @@
+int a = 1;
+float b = 2.1;
+char c = 'a';                       // 97 as i32
+
+// Float to int and int to float
+int d = a + b;                      // d = 3
+d = b + a;                          // d = 3
+
+// Char to float and float to char
+float e = c + b;                    // e = 99.1
+char f = e - a;                     // f = 'b' (98)
+
+// Int to char and char to int
+char g = f + a;                     // g = 'c' (99)
+
+return g;
+// Should return 99
+
+

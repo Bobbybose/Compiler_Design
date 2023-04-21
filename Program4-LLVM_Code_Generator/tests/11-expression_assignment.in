@@ -1,3 +1,5 @@
 int a;
 float b = 3.1;
 a = b;
+return a;
+// Should return 3

@@ -22,7 +22,13 @@
 
 - The Makefile was also provided by Dr. Moore
 
-- A set of tests is included in /tests in order to test different possibilities for every production
+- A set of tests is included in /tests in order to test different possibilities for every production and type conversion
+    - The expected LLVM conversion output is provided as .ll files
+    - Each test has an expected return value
+        - To check result do:
+        ```
+         'lli llvm_test_output.ll; echo $?'
+        ```
 
 ## Citations
 **[Flex Manual](https://westes.github.io/flex/manual/)**

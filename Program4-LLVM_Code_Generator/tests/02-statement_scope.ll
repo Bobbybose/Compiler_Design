@@ -12,5 +12,6 @@ define dso_local i32 @main() {
   %t5 = load i32, i32 *%t1
   %t6 = alloca i32
   store i32 %t5, i32* %t6
-  ret i32 0
+  %t7 = load i32, i32 *%t6
+  ret i32 %t7
 }

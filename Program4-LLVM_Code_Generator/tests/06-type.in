@@ -1,3 +1,5 @@
 int apple;
 float orange;
-char banana = '2';
+char banana = 'a';
+return banana;
+// Should return 97

@@ -6,11 +6,12 @@ define dso_local i32 @main() {
   store i32 2, i32* %t1
   %t2 = alloca i8
   store i8 103, i8* %t2
-  %t3 = load i32, i32 *%t1
-  %t4 = load i8, i8 *%t2
-  %t5 = sext i8 %t4 to i32
-  %t6 = srem i32 %t3, %t5
+  %t3 = load i8, i8 *%t2
+  %t4 = load i32, i32 *%t1
+  %t5 = sext i8 %t3 to i32
+  %t6 = srem i32 %t5, %t4
   %t7 = alloca i32
   store i32 %t6, i32* %t7
-  ret i32 0
+  %t8 = load i32, i32 *%t7
+  ret i32 %t8
 }

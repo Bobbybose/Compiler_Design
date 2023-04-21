@@ -6,7 +6,8 @@ define dso_local i32 @main() {
   %t2 = alloca float
   %t3 = alloca i8
   store i32 2, i32* %t1
-  store float 0x4000CCCCC0000000, float* %t2
+  store float 0x4008CCCCC0000000, float* %t2
   store i8 97, i8* %t3
-  ret i32 0
+  %t4 = load i32, i32 *%t1
+  ret i32 %t4
 }
