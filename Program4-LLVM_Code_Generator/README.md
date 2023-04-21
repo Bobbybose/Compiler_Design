@@ -25,9 +25,9 @@
 - A set of tests is included in /tests in order to test different possibilities for every production and type conversion
     - The expected LLVM conversion output is provided as .ll files
     - Each test has an expected return value
-        - To check result do:
+        - To check result, run
         ```
-         'lli llvm_test_output.ll; echo $?'
+         lli llvm_test_output.ll; echo $?
         ```
 
 ## Citations
@@ -43,14 +43,30 @@ No external packages required beyond Flex, Bison, and LLVM.
 [iostream](https://en.cppreference.com/w/cpp/header/iostream), [vector](https://cplusplus.com/reference/vector/vector/), [list](https://cplusplus.com/reference/list/list/), [unordered_map](https://cplusplus.com/reference/list/list/), and [string](https://en.cppreference.com/w/cpp/string) from C++ standard library are required. 
 
 ## How to Build
-To build, run 'make' or 'make all'
+To build, run
+```
+make
+``` 
+or 
+```
+make all
+```
 
-'make clean' will remove generated files
+To remove generated files, run
+```
+'make clean'
+```
 
 ## How to Run
-To run without input file, do './c2ll'
+To run without input file, do 
+```
+./c2ll
+```
 
-To run with input file, do './c2ll < input-file'
+To run with input file, do 
+```
+./c2ll < input-file
+```
 
 ## Program Design
 Program consists of three main parts: lexical analyzer, parser, and address/symbol table classes
